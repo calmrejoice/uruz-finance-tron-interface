@@ -47,8 +47,9 @@ const textStyle = {
   }),
   variants: {
     helper: (props: StyleFunctionProps) => ({
-      color: mode("gray.500", "white")(props),
+      color: mode("gray.500", "gray.500")(props),
       fontSize: "sm",
+      fontWeight: "semibold",
     }),
   },
 };
