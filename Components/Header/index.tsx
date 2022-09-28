@@ -1,16 +1,17 @@
 import {
+  Box,
   Button,
   Flex,
   HStack,
   IconButton,
   Spacer,
-  Text,
   useColorMode,
 } from "@chakra-ui/react";
 import { FaRegMoon, FaSun } from "react-icons/fa";
 import { useRouter } from "next/router";
 
 import { UruzLogo } from "./UruzLogo";
+import { PageLink } from "./PageLink";
 
 export const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -21,18 +22,10 @@ export const Header = () => {
       <UruzLogo />
       <Spacer />
       <HStack>
-        <Button variant="brandLink" onClick={() => router.push("/")}>
-          Lend
-        </Button>
-        <Button variant="brandLink" onClick={() => router.push("/portfolio")}>
-          Portfolio
-        </Button>
-        <Button variant="brandLink" onClick={() => router.push("/governance")}>
-          Governance
-        </Button>
-        <Button variant="brandLink" onClick={() => router.push("/stake")}>
-          Stake
-        </Button>
+        <PageLink routeName="/" pageName="Lend" />
+        <PageLink routeName="/portfolio" pageName="Portfolio" />
+        <PageLink routeName="/governance" pageName="Governance" />
+        <PageLink routeName="/stake" pageName="Stake" />
       </HStack>
       <Spacer />
       <HStack spacing="3">
