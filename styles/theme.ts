@@ -77,7 +77,7 @@ const components = {
 
 /**Custom Fonts */
 const fonts = {
-  heading: "Source Sans Pro, sans-serif",
+  heading: "K2D, Source Sans Pro, sans-serif",
   body: "Open Sans, sans-serif",
 };
 

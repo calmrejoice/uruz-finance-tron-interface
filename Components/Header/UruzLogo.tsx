@@ -1,9 +1,9 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Heading, Text } from "@chakra-ui/react";
 
 export const UruzLogo = () => {
   return (
     <Flex>
-      <Text>UruzLogo</Text>
+      <Heading fontSize="3xl">U R U Z</Heading>
     </Flex>
   );
 };
