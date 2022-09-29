@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
 import { Flex, Heading, Text, useColorMode } from "@chakra-ui/react";
 
-import { Card } from "Components/Shared/Card";
-import { LendStats } from "Components/LendPage/LendStats";
-import { LendingPools } from "Components/LendPage/LendingPools";
+import { Card } from "@components/Shared/Card";
+import { LendStats } from "@components/LendPage/LendStats";
+import { LendingPools } from "@components/LendPage/LendingPools";
 
 const Home: NextPage = () => {
   const { colorMode, toggleColorMode } = useColorMode();

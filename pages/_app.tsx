@@ -2,11 +2,11 @@ import type { AppProps } from "next/app";
 import { ChakraProvider, Flex } from "@chakra-ui/react";
 import Head from "next/head";
 
-import { Header } from "Components/Header";
+import { Header } from "@components/Header";
 import theme from "@styles/theme";
 import "@styles/fonts";
 import "@styles/styles.css";
-import { Footer } from "Components/Footer";
+import { Footer } from "@components/Footer";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

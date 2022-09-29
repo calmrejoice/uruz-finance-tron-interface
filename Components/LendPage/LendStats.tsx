@@ -1,7 +1,7 @@
 import { Divider, Flex, Heading, Text, VStack } from "@chakra-ui/react";
 import { numberWithCommas } from "@utils/formatBalance";
 
-import { Card } from "Components/Shared/Card";
+import { Card } from "@components/Shared/Card";
 import { LendStat } from "./LendStat";
 
 export const LendStats = () => {
