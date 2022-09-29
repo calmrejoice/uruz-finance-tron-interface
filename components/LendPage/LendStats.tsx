@@ -5,9 +5,6 @@ import { Card } from "@components/Shared/Card";
 import { LendStat } from "./LendStat";
 
 export const LendStats = () => {
-  const randomSupply = numberWithCommas("994382759");
-  const randomBorrow = numberWithCommas("359258193");
-
   return (
     <Card>
       <LendStat title="Total Supply" stat="$994,382,759" />
