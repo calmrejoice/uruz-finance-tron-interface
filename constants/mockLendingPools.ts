@@ -1,4 +1,15 @@
-export const mockLendingPools = [
+export interface IPool {
+  assetName: string;
+  symbol: string;
+  assetImage: string;
+  totalSupply: string;
+  apy: string;
+  totalBorrow: string;
+  borrowApy: string;
+  availableLending: string;
+}
+
+export const mockLendingPools: IPool[] = [
   {
     assetName: "TRON",
     symbol: "TRX",

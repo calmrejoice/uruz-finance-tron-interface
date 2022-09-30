@@ -15,7 +15,9 @@ import {
   Badge,
 } from "@chakra-ui/react";
 
-import { mockLendingPools } from "constants/mockLendingPools";
+import { IPool, mockLendingPools } from "constants/mockLendingPools";
+import { SupplyModal } from "./SupplyModal";
+import { AssetTableRow } from "./AssetTableRow";
 
 export const LendingPools = () => {
   return (
@@ -35,56 +37,7 @@ export const LendingPools = () => {
           </Thead>
           <Tbody>
             {mockLendingPools.map((pool, index) => {
-              return (
-                <Tr key="index">
-                  <Td>
-                    <HStack>
-                      <Image src={pool.assetImage} boxSize="30px" />
-                      <VStack spacing="0" alignItems="left">
-                        <Text fontSize="sm" fontWeight="bold">
-                          {pool.symbol}
-                        </Text>
-                        <Text variant="helper">{pool.assetName}</Text>
-                      </VStack>
-                    </HStack>
-                  </Td>
-
-                  <Td fontWeight="bold">{pool.totalSupply}</Td>
-                  <Td fontWeight="bold">
-                    <Badge colorScheme="green" fontSize="md">
-                      {pool.apy}
-                    </Badge>
-                  </Td>
-                  <Td fontWeight="bold">{pool.totalBorrow}</Td>
-                  <Td fontWeight="bold">
-                    <Badge colorScheme="red" fontSize="md">
-                      {pool.borrowApy}
-                    </Badge>
-                  </Td>
-                  <Td fontWeight="bold">{pool.availableLending}</Td>
-
-                  <Td>
-                    <VStack>
-                      <Button
-                        width="100%"
-                        variant="outline"
-                        fontSize="sm"
-                        colorScheme="green"
-                      >
-                        Supply
-                      </Button>
-                      <Button
-                        width="100%"
-                        variant="outline"
-                        fontSize="sm"
-                        colorScheme="red"
-                      >
-                        Borrow
-                      </Button>
-                    </VStack>
-                  </Td>
-                </Tr>
-              );
+              return <AssetTableRow key={index} pool={pool} />;
             })}
           </Tbody>
         </Table>
