@@ -8,7 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Card } from "@components/Shared/Card";
-import { InfoTooltip } from "@components/Shared/InfoToolTip";
+import { InfoTooltip } from "@components/Shared/InfoTooltip";
 import { AccountStat } from "./AccountStat";
 import { BorrowLimit } from "./BorrowLimit";
 
