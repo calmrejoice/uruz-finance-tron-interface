@@ -7,13 +7,30 @@ import {
   Image,
   Spacer,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { AccountStat } from "@components/PortfolioPage/AccountStat";
 import { Card } from "@components/Shared/Card";
+import { StakeModal } from "./StakeModal";
+import { WithdrawModal } from "./WithdrawModal";
 
 export const StakeCard = () => {
+  const {
+    isOpen: isOpenWithdraw,
+    onOpen: onOpenWithdraw,
+    onClose: onCloseWithdraw,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenStake,
+    onOpen: onOpenStake,
+    onClose: onCloseStake,
+  } = useDisclosure();
+
   return (
     <Card flexDir="column" width="3xl" minHeight="md">
+      <WithdrawModal isOpen={isOpenWithdraw} onClose={onCloseWithdraw} />
+      <StakeModal isOpen={isOpenStake} onClose={onCloseStake} />
       <Flex flexDir="row" alignItems="center">
         <Image
           src="/tokens/urz.png"
@@ -48,9 +65,16 @@ export const StakeCard = () => {
       </HStack>
       <Spacer />
 
-      <HStack width="50%">
-        <Button flex={1}>Stake</Button>
-        <Button flex={1} variant="outline">
+      <HStack width="100%" spacing="30">
+        <Button flex={1} size="lg" fontSize="lg" onClick={() => onOpenStake()}>
+          Stake
+        </Button>
+        <Button
+          flex={1}
+          variant="outline"
+          size="lg"
+          onClick={() => onOpenWithdraw()}
+        >
           Withdraw
         </Button>
       </HStack>
