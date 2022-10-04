@@ -1,5 +1,5 @@
 import { Flex, Progress, Spacer, Text } from "@chakra-ui/react";
-import { InfoTooltip } from "@components/Shared/InfoToolTip";
+import { InfoTooltip } from "@components/Shared/InfoTooltip";
 
 export const BorrowLimit = () => {
   return (
