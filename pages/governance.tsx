@@ -1,10 +1,15 @@
 import type { NextPage } from "next";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
+
+import { VotesCard } from "@components/GovernancePage/VotesCard";
+import { ProposalsCard } from "@components/GovernancePage/ProposalsCard";
 
 const GovernancePage: NextPage = () => {
   return (
-    <Flex m="auto" flexDir="column">
-      <Text>im governance page</Text>
+    <Flex mx="32" flexDir="row">
+      <ProposalsCard />
+
+      <VotesCard />
     </Flex>
   );
 };
