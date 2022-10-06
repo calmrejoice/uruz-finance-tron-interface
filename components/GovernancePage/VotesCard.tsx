@@ -17,7 +17,7 @@ export const VotesCard = () => {
   const router = useRouter();
 
   return (
-    <Card flex={1} flexDir="column">
+    <Card flex={1} flexDir="column" height="100%">
       <HStack alignItems="center">
         <Heading fontSize="lg">My wallet</Heading>
         <InfoTooltip label="All URZ holders can co-govern the platform by voting for proposals with their URZ tokens." />
