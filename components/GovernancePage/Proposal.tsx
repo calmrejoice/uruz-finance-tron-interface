@@ -1,6 +1,8 @@
 import { Badge, Flex, HStack, Spacer, Text } from "@chakra-ui/react";
 
 import { IProposal } from "@constants/mockProposals";
+import { formatDate } from "@utils/formatDate";
+import { format } from "date-fns";
 import { useRouter } from "next/router";
 
 type proposalProps = {
@@ -31,9 +33,7 @@ export const Proposal = ({ proposal }: proposalProps) => {
       <HStack>
         <Badge colorScheme="green">{proposal.state}</Badge>
         <Spacer />
-        <Text variant="helper">
-          End at: {proposal.endDate?.toLocaleDateString()}
-        </Text>
+        <Text variant="helper">Ends at: {formatDate(proposal.endDate)}</Text>
       </HStack>
     </Flex>
   );
