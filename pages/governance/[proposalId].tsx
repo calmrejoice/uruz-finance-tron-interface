@@ -1,25 +1,10 @@
 import { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import {
-  Badge,
-  Button,
-  Divider,
-  Flex,
-  Heading,
-  HStack,
-  Icon,
-  Progress,
-  Spacer,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Flex, Heading, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { BsFillCheckCircleFill } from "react-icons/bs";
-import { format } from "date-fns";
 
 import { IProposal, mockProposals } from "@constants/mockProposals";
 import { Card } from "@components/Shared/Card";
-import { formatDate } from "@utils/formatDate";
 import { ProposalHistoryCard } from "@components/ProposalDetailsPage/ProposalHistoryCard";
 import { ProposalVotesCard } from "@components/ProposalDetailsPage/ProposalVotesCard";
 
