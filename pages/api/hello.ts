@@ -1,13 +1,19 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from "next";
+import { initTronWeb } from "@utils/tronWeb";
 
 type Data = {
-  name: string
-}
+  result: string;
+};
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(200).json({ name: 'John Doe' })
+  const { tronWeb } = initTronWeb();
+
+  const result = await tronWeb.trx.getAccount(
+    "TEhwqUcbbYn9Y1pgFTQ3Hsj2LdVqv5WcTQ"
+  );
+
+  res.status(200).json(result);
 }

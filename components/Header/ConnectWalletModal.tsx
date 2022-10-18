@@ -55,7 +55,6 @@ export const ConnectWalletModal = ({ isOpen, onClose }: any) => {
                 href="https://www.tronlink.org/"
                 target="_blank"
                 width="100%"
-                // rightIcon={<FaWallet />}
               >
                 Install TronLink wallet
               </Button>
