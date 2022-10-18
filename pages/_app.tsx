@@ -7,18 +7,21 @@ import theme from "@styles/theme";
 import "@styles/fonts";
 import "@styles/styles.css";
 import { Footer } from "@components/Footer";
+import { AuthProvider } from "@context/AuthContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
-      <Head>
-        <title>Uruz Finance</title>
-        <meta name="description" content="" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Header />
-      <Component {...pageProps} />
-      <Footer />
+      <AuthProvider>
+        <Head>
+          <title>Uruz Finance</title>
+          <meta name="description" content="" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <Header />
+        <Component {...pageProps} />
+        <Footer />
+      </AuthProvider>
     </ChakraProvider>
   );
 }

@@ -1,8 +1,6 @@
 import type { NextPage } from "next";
-import { Flex, Text } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { Flex } from "@chakra-ui/react";
 
-import { mockLendingPools } from "@constants/mockLendingPools";
 import { InterestRateModelCard } from "@components/MarketDetailsPage/InterestRateModelCard";
 import { MarketInfoCard } from "@components/MarketDetailsPage/MarketInfoCard";
 
