@@ -7,6 +7,7 @@ interface AuthContextValue {
   network: string;
   ready: boolean;
   installed: boolean;
+  trxBalance: number;
   onConnectWallet: any;
 }
 
@@ -17,6 +18,7 @@ const AuthContext = createContext<AuthContextValue>({
   network: "",
   ready: false,
   installed: false,
+  trxBalance: 0,
   onConnectWallet: () => {},
 });
 
@@ -27,6 +29,7 @@ export const AuthProvider = ({ children }: any) => {
   const [network, setNetwork] = useState<string>("");
   const [ready, setReady] = useState<boolean>(false);
   const [installed, setInstalled] = useState<boolean>(false);
+  const [trxBalance, setTrxBalance] = useState<number>(0);
 
   useEffect(() => {
     if (window) {
@@ -39,7 +42,7 @@ export const AuthProvider = ({ children }: any) => {
         setNetwork(tronWeb.fullNode.host);
       }
     }
-  }, [tron, ready, name, address, network, installed]);
+  }, [tron, ready, name, address, network, installed, trxBalance]);
 
   const onConnectWallet = async () => {
     const res = await tron?.request({ method: "tron_requestAccounts" });
@@ -63,6 +66,7 @@ export const AuthProvider = ({ children }: any) => {
         network,
         ready,
         installed,
+        trxBalance,
         onConnectWallet,
       }}
     >

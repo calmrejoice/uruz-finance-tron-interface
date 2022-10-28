@@ -1,13 +1,28 @@
 //@ts-ignore
 import TronWeb from "tronweb";
 
-export const initTronWeb = () => {
-  const tronWeb = new TronWeb({
-    // fullHost: "https://api.trongrid.io",
-    fullHost: "https://nile.trongrid.io",
-    // headers: { "TRON-PRO-API-KEY": "your api key" },
-    // privateKey: "your private key",
-  });
+export const tronWeb = {
+  nile: new TronWeb(
+    "https://api.nileex.io/",
+    "https://api.nileex.io/",
+    "https://api.nileex.io/",
+    process.env.PRIVATE_KEY_NILE
+  ),
+  // mainnet: new TronWeb(
+  //   "https://api.trongrid.io",
+  //   "https://api.trongrid.io",
+  //   "https://api.trongrid.io",
+  //   process.env.PRIVATE_KEY_MAINNET
+  // ),
+  // shasta: new TronWeb(
+  //   "https://api.shasta.trongrid.io",
+  //   "https://api.shasta.trongrid.io",
+  //   "https://api.shasta.trongrid.io",
+  //   process.env.PRIVATE_KEY_SHASTA
+  // ),
+};
 
-  return { tronWeb };
+export const tronOptions = {
+  feeLimit: 100_000_000,
+  callValue: 0,
 };

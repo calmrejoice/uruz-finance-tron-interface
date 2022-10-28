@@ -20,8 +20,11 @@ import { ConnectWalletModal } from "./ConnectWalletModal";
 import { useAuth } from "@context/AuthContext";
 import { truncateHash } from "@utils/formatBalance";
 import { addBook } from "@hooks/testBlockchain";
+import { useApprovalStatus, useApprove } from "@hooks/useApprove";
 import { ToastLinkButton } from "@components/Shared/ToastLinkButton";
-import { useHello } from "@hooks/swrHooks";
+import { useHello, useTokenDetails, useTokensPrice } from "@hooks/swrHooks";
+import { config } from "@constants/config";
+import { useBalance, useTrxBalance } from "@hooks/useBalance";
 
 export const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -33,16 +36,36 @@ export const Header = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { hello } = useHello(true);
-
-  console.log(hello);
+  // const { tokenDetails } = useTokenDetails("trx");
+  // console.log(tokenDetails);
 
   const toast = useToast();
-  const onAddBook = async () => {
+
+  const isApproved = useApprovalStatus(
+    tron,
+    config.urzAddress,
+    address,
+    config.uurzAddress
+  );
+  console.log(isApproved);
+
+  const balance = useBalance(tron, config.urzAddress, address);
+
+  console.log(balance);
+  console.log(address);
+
+  const trxBalance = useTrxBalance(tron, address);
+  console.log(trxBalance?.available, "trx");
+
+  const onApprove = async () => {
     setIsLoading(true);
 
     // @ts-ignore
-    const res: string = await addBook("Hello1", "Test2", 100, tron);
+    const res: string = await useApprove(
+      tron,
+      config.urzAddress,
+      config.uurzAddress
+    );
     if (res == "Confirmation declined by user") {
       toast({
         title: "Transaction failed",
@@ -72,8 +95,8 @@ export const Header = () => {
         <PageLink routeName="/governance" pageName="Governance" />
         <PageLink routeName="/stake" pageName="Stake" />
       </HStack>
-      <Button onClick={onAddBook} isLoading={isLoading}>
-        Add book
+      <Button onClick={onApprove} isLoading={isLoading}>
+        Approve UURZ
       </Button>
       <Spacer />
       <HStack spacing="3">
