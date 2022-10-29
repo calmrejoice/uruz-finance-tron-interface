@@ -19,10 +19,8 @@ import { PageLink } from "./PageLink";
 import { ConnectWalletModal } from "./ConnectWalletModal";
 import { useAuth } from "@context/AuthContext";
 import { truncateHash } from "@utils/formatBalance";
-import { addBook } from "@hooks/testBlockchain";
-import { useApprovalStatus, useApprove } from "@hooks/useApprove";
+import { useApprovalStatus, onApprove } from "@hooks/useApprove";
 import { ToastLinkButton } from "@components/Shared/ToastLinkButton";
-import { useHello, useTokenDetails, useTokensPrice } from "@hooks/swrHooks";
 import { config } from "@constants/config";
 import { useBalance, useTrxBalance } from "@hooks/useBalance";
 
@@ -57,11 +55,11 @@ export const Header = () => {
   const trxBalance = useTrxBalance(tron, address);
   console.log(trxBalance?.available, "trx");
 
-  const onApprove = async () => {
+  const handleApprove = async () => {
     setIsLoading(true);
 
     // @ts-ignore
-    const res: string = await useApprove(
+    const res: string = await onApprove(
       tron,
       config.urzAddress,
       config.uurzAddress
@@ -95,7 +93,7 @@ export const Header = () => {
         <PageLink routeName="/governance" pageName="Governance" />
         <PageLink routeName="/stake" pageName="Stake" />
       </HStack>
-      <Button onClick={onApprove} isLoading={isLoading}>
+      <Button onClick={handleApprove} isLoading={isLoading}>
         Approve UURZ
       </Button>
       <Spacer />

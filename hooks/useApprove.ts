@@ -2,7 +2,7 @@ import { config } from "@constants/config";
 import { tronOptions } from "@utils/tronWeb";
 import { useEffect, useState } from "react";
 
-export const useApprove = async (
+export const onApprove = async (
   tronWeb: any,
   tokenAddress: string,
   spenderAddress: string

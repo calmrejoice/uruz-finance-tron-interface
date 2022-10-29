@@ -30,9 +30,5 @@ export const getTokenApprovalStatus = async (
     .call();
   const isApproved = approvalAmount >= config.unlimitedApprovalAmount || false;
 
-  console.log(approvalAmount);
-  console.log(config.unlimitedApprovalAmount);
-  console.log(isApproved);
-
   return isApproved;
 };
