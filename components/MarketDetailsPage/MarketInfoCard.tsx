@@ -43,7 +43,7 @@ export const MarketInfoCard = () => {
     onOpen: onOpenBorrow,
   } = useDisclosure();
   const { markets, isEmptyMarkets, isLoadingMarkets } = useMarkets();
-  const market = markets.filter(
+  const market = markets?.filter(
     (market) => market.collateralSymbol === tokenSymbol
   )[0];
 
