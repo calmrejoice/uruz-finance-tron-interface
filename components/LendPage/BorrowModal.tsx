@@ -60,7 +60,6 @@ export const BorrowModal = ({
   const balance: any = useBalance(
     tron,
     address,
-    false,
     tokenAddress,
     isTrx,
     marketDetails?.totalCash

@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
 import {
-  Badge,
   Button,
   Flex,
-  Heading,
   HStack,
   Image,
   SimpleGrid,
   Text,
   useDisclosure,
-  VStack,
 } from "@chakra-ui/react";
 import { Card } from "@components/Shared/Card";
 import { IPool, mockLendingPools } from "@constants/mockLendingPools";
@@ -42,6 +39,7 @@ export const MarketInfoCard = () => {
     onClose: onCloseBorrow,
     onOpen: onOpenBorrow,
   } = useDisclosure();
+
   const { markets, isEmptyMarkets, isLoadingMarkets } = useMarkets();
   const market = markets?.filter(
     (market) => market.collateralSymbol === tokenSymbol

@@ -33,7 +33,7 @@ import { TabHeading } from "./TabHeading";
 import { useAuth } from "@context/AuthContext";
 import { IMarketDetails } from "@constants/IMarketDetails";
 import { IMarket } from "@constants/IMarket";
-import { useBalance } from "@hooks/useBalance";
+import { useBalance, useUTokenBalance } from "@hooks/useBalance";
 import { onSupply, useSupplied } from "@hooks/useSupply";
 import { config } from "@constants/config";
 import { es } from "date-fns/locale";
@@ -62,18 +62,15 @@ export const SupplyModal = ({
   const balance: any = useBalance(
     tron,
     address,
-    false,
     tokenAddress,
     isTrx,
     marketDetails?.totalCash
   );
 
-  const utokenBalance: any = useBalance(
+  const utokenBalance: any = useUTokenBalance(
     tron,
     address,
-    true,
-    tokenAddress,
-    isTrx,
+    market?.utokenAddress,
     marketDetails?.totalCash
   );
 
@@ -163,11 +160,7 @@ export const SupplyModal = ({
     let tokenBal = 0;
 
     if (tab === "supply") {
-      if (isTrx) {
-        tokenBal = balance?.available;
-      } else {
-        tokenBal = balance?.balanceNum;
-      }
+      tokenBal = balance.displayBalance;
     } else {
       // Withdraw tab
       tokenBal = utokenBalance?.displayBalance;

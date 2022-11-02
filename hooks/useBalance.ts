@@ -5,9 +5,8 @@ import { formatBalance, formatDisplayBalance } from "@utils/formatBalance";
 export const useBalance = (
   tronWeb: any,
   accountAddress: string,
-  isUToken: boolean = false,
-  tokenAddress?: string,
-  isTrx: boolean = false,
+  tokenAddress: string | undefined,
+  isTrx: boolean,
   refreshParam?: any
 ) => {
   const [balanceNum, setBalanceNum] = useState(0);
@@ -17,67 +16,65 @@ export const useBalance = (
     if (!tronWeb || !accountAddress) return;
 
     const getBalance = async () => {
-      const contract = await tronWeb?.contract().at(tokenAddress);
-      const rawBalance = await contract.balanceOf(accountAddress).call();
-      const decimals = isUToken
-        ? config.utokenDecimals
-        : config.trc20TokenDecimals;
+      if (isTrx) {
+        const account = await tronWeb?.trx.getAccount(accountAddress);
+        const availableNum = formatBalance(account.balance, config.trxDecimals);
+        const availableDisplay = formatDisplayBalance(
+          account.balance,
+          config.trxDecimals
+        );
 
-      const balanceNum = formatBalance(rawBalance, decimals);
-      const displayBalance = formatDisplayBalance(rawBalance, decimals);
+        setBalanceNum(availableNum);
+        setDisplayBalance(availableDisplay);
+      } else {
+        const contract = await tronWeb?.contract().at(tokenAddress);
+        const rawBalance = await contract.balanceOf(accountAddress).call();
 
-      setBalanceNum(balanceNum);
-      setDisplayBalance(displayBalance);
+        const balanceNum = formatBalance(rawBalance, config.trc20TokenDecimals);
+        const displayBalance = formatDisplayBalance(
+          rawBalance,
+          config.trc20TokenDecimals
+        );
+
+        setBalanceNum(balanceNum);
+        setDisplayBalance(displayBalance);
+      }
     };
 
-    const getTrxBalance = async () => {
-      const account = await tronWeb?.trx.getAccount(accountAddress);
-      const availableNum = formatBalance(account.balance, config.trxDecimals);
-      const availableDisplay = formatDisplayBalance(
-        account.balance,
-        config.trxDecimals
-      );
-
-      setBalanceNum(availableNum);
-      setDisplayBalance(availableDisplay);
-    };
-    isTrx ? getBalance() : getTrxBalance();
+    getBalance();
   }, [tronWeb, tokenAddress, accountAddress, refreshParam]);
 
   return { balanceNum, displayBalance };
 };
 
-// export const useTrxBalance = (
-//   tronWeb: any,
-//   accountAddress: string,
-//   refreshParam?: any
-// ) => {
-//   const [available, setAvailable] = useState(0);
-//   const [availableDisplay, setAvailableDisplay] = useState("0");
-//   const [frozen, setFrozen] = useState(0);
+export const useUTokenBalance = (
+  tronWeb: any,
+  accountAddress: string,
+  tokenAddress: string | undefined,
+  refreshParam?: any
+) => {
+  const [balanceNum, setBalanceNum] = useState(0);
+  const [displayBalance, setDisplayBalance] = useState("0");
 
-//   useEffect(() => {
-//     if (!tronWeb || !accountAddress) return;
+  useEffect(() => {
+    if (!tronWeb || !accountAddress) return;
 
-//     const getBalance = async () => {
-//       const account = await tronWeb?.trx.getAccount(accountAddress);
-//       const availableNum = formatBalance(account.balance, config.trxDecimals);
-//       const availableDisplay = formatDisplayBalance(
-//         account.balance,
-//         config.trxDecimals
-//       );
+    const getUTokenBalance = async () => {
+      const contract = await tronWeb?.contract().at(tokenAddress);
+      const rawBalance = await contract.balanceOf(accountAddress).call();
 
-//       const frozenNumber = formatBalance(
-//         account.frozen[0].frozen_balance,
-//         config.trxDecimals
-//       );
-//       setAvailable(availableNum);
-//       setAvailableDisplay(availableDisplay);
+      const balanceNum = formatBalance(rawBalance, config.utokenDecimals);
+      const displayBalance = formatDisplayBalance(
+        rawBalance,
+        config.utokenDecimals
+      );
 
-//       setFrozen(frozenNumber);
-//     };
-//     getBalance();
-//   }, [tronWeb, accountAddress, refreshParam]);
+      setBalanceNum(balanceNum);
+      setDisplayBalance(displayBalance);
+    };
 
-//   return { availableDisplay, available, frozen };
-// };
+    getUTokenBalance();
+  }, [tronWeb, tokenAddress, accountAddress, refreshParam]);
+
+  return { balanceNum, displayBalance };
+};
