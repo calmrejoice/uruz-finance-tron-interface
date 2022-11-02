@@ -17,12 +17,13 @@ import { useRouter } from "next/router";
 import { MarketInfoItem } from "./MarketInfoItem";
 import { SupplyModal } from "@components/LendPage/SupplyModal";
 import { BorrowModal } from "@components/LendPage/BorrowModal";
+import { useMarketDetails, useMarkets } from "@hooks/swrHooks";
 
 export const MarketInfoCard = () => {
   const router = useRouter();
 
   const { query } = router;
-  const { tokenSymbol } = query;
+  const { tokenSymbol }: any = query;
 
   const [pool, setPool] = useState<IPool | undefined>();
 
@@ -41,14 +42,31 @@ export const MarketInfoCard = () => {
     onClose: onCloseBorrow,
     onOpen: onOpenBorrow,
   } = useDisclosure();
+  const { markets, isEmptyMarkets, isLoadingMarkets } = useMarkets();
+  const market = markets.filter(
+    (market) => market.collateralSymbol === tokenSymbol
+  )[0];
+
+  const { marketDetails, isLoadingMarketDetails, mutate } =
+    useMarketDetails(tokenSymbol);
 
   return (
     <Card flexDir="column" flex={1}>
-      <SupplyModal isOpen={isOpenSupply} onClose={onCloseSupply} pool={pool} />
-      <BorrowModal isOpen={isOpenBorrow} onClose={onCloseBorrow} pool={pool} />
+      <SupplyModal
+        isOpen={isOpenSupply}
+        onClose={onCloseSupply}
+        market={market}
+        marketDetails={marketDetails}
+      />
+      <BorrowModal
+        isOpen={isOpenBorrow}
+        onClose={onCloseBorrow}
+        market={market}
+        marketDetails={marketDetails}
+      />
       <HStack spacing="6">
         <HStack>
-          <Image src={pool?.assetImage} boxSize="30" />
+          <Image src={pool?.assetImage} boxSize="30" alt="asset logo" />
           <Flex flexDir="column">
             <Text fontWeight="bold">{pool?.symbol}</Text>
             <Text variant="helper">{pool?.assetName}</Text>

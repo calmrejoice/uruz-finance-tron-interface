@@ -25,7 +25,7 @@ export const WithdrawModal = ({ isOpen, onClose }: any) => {
       <ModalContent>
         <ModalHeader>
           <HStack>
-            <Image src="/tokens/urz.png" boxSize="30" />
+            <Image src="/tokens/urz.png" boxSize="30" alt="urz logo" />
             <Text>Withdraw URZ</Text>
           </HStack>
         </ModalHeader>
@@ -34,7 +34,7 @@ export const WithdrawModal = ({ isOpen, onClose }: any) => {
           <Flex flexDir="column" my="6">
             <InputGroup>
               <InputLeftElement>
-                <Image src="/tokens/urz.png" boxSize="20px" />
+                <Image src="/tokens/urz.png" boxSize="20px" alt="urz logo" />
               </InputLeftElement>
               <Input placeholder="0.00" type="number" variant="filled" />
               <InputRightElement>
@@ -44,7 +44,7 @@ export const WithdrawModal = ({ isOpen, onClose }: any) => {
               </InputRightElement>
             </InputGroup>
             <HStack my="6">
-              <Image src="/tokens/urz.png" boxSize="20px" />
+              <Image src="/tokens/urz.png" boxSize="20px" alt="urz logo" />
               <Text variant="helper">Available URZ</Text>
               <Spacer />
               <Text fontWeight="bold">0 URZ</Text>

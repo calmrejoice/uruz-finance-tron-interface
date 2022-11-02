@@ -22,7 +22,7 @@ import { truncateHash } from "@utils/formatBalance";
 import { useApprovalStatus, onApprove } from "@hooks/useApprove";
 import { ToastLinkButton } from "@components/Shared/ToastLinkButton";
 import { config } from "@constants/config";
-import { useBalance, useTrxBalance } from "@hooks/useBalance";
+import { useBalance } from "@hooks/useBalance";
 
 export const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -34,9 +34,6 @@ export const Header = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // const { tokenDetails } = useTokenDetails("trx");
-  // console.log(tokenDetails);
-
   const toast = useToast();
 
   const isApproved = useApprovalStatus(
@@ -45,15 +42,6 @@ export const Header = () => {
     address,
     config.uurzAddress
   );
-  console.log(isApproved);
-
-  const balance = useBalance(tron, config.urzAddress, address);
-
-  console.log(balance);
-  console.log(address);
-
-  const trxBalance = useTrxBalance(tron, address);
-  console.log(trxBalance?.available, "trx");
 
   const handleApprove = async () => {
     setIsLoading(true);

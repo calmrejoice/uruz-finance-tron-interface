@@ -34,7 +34,7 @@ export const ConnectWalletModal = ({ isOpen, onClose }: any) => {
         <ModalCloseButton />
         <ModalBody>
           <VStack spacing="6" mt="6">
-            <Image src="/tokens/urz.png" boxSize="60px" />
+            <Image src="/tokens/urz.png" boxSize="60px" alt="urz logo" />
 
             <Text variant="helper">Connect TronLink wallet to use Uruz</Text>
 

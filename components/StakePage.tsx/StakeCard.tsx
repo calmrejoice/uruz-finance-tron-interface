@@ -37,6 +37,7 @@ export const StakeCard = () => {
           boxSize="30px"
           borderRadius="full"
           mr="3"
+          alt="urz logo"
         />
         <Heading fontWeight="bold" fontSize="lg">
           URZ

@@ -1,5 +1,4 @@
 import {
-  Flex,
   HStack,
   Image,
   Td,
@@ -10,18 +9,24 @@ import {
   Badge,
   Button,
   useColorMode,
+  Skeleton,
 } from "@chakra-ui/react";
+import { IMarket } from "@constants/IMarket";
 
-import { IPool } from "@constants/mockLendingPools";
+import { useMarketDetails } from "@hooks/swrHooks";
 import { useRouter } from "next/router";
 import { BorrowModal } from "./BorrowModal";
 import { SupplyModal } from "./SupplyModal";
 
 type AssetTableRowProps = {
-  pool: IPool;
+  market: IMarket;
 };
 
-export const AssetTableRow = ({ pool }: AssetTableRowProps) => {
+export const AssetTableRow = ({ market }: AssetTableRowProps) => {
+  const { marketDetails, isLoadingMarketDetails, mutate } = useMarketDetails(
+    market.collateralSymbol
+  );
+
   const {
     isOpen: isOpenSupply,
     onClose: onCloseSupply,
@@ -41,7 +46,7 @@ export const AssetTableRow = ({ pool }: AssetTableRowProps) => {
   const onClickMarketDetails = () => {
     router.push({
       pathname: "marketDetails",
-      query: { tokenSymbol: pool.symbol },
+      query: { tokenSymbol: market.collateralSymbol },
     });
   };
 
@@ -52,41 +57,68 @@ export const AssetTableRow = ({ pool }: AssetTableRowProps) => {
         cursor: "pointer",
       }}
     >
-      <SupplyModal isOpen={isOpenSupply} onClose={onCloseSupply} pool={pool} />
-      <BorrowModal isOpen={isOpenBorrow} onClose={onCloseBorrow} pool={pool} />
-
+      <SupplyModal
+        isOpen={isOpenSupply}
+        onClose={onCloseSupply}
+        marketDetails={marketDetails}
+        market={market}
+      />
+      <BorrowModal
+        isOpen={isOpenBorrow}
+        onClose={onCloseBorrow}
+        marketDetails={marketDetails}
+        market={market}
+      />
       <Td onClick={onClickMarketDetails}>
         <HStack>
-          <Image src={pool.assetImage} boxSize="30px" />
+          <Image src={market.assetImage} boxSize="30px" alt="asset logo" />
           <VStack spacing="0" alignItems="left">
             <Text fontSize="sm" fontWeight="bold">
-              {pool.symbol}
+              {market.collateralSymbol}
             </Text>
-            <Text variant="helper">{pool.assetName}</Text>
+            <Text variant="helper">{market.collateralName}</Text>
           </VStack>
         </HStack>
       </Td>
-
-      <Td onClick={onClickMarketDetails} fontWeight="bold">
-        {pool.totalSupply}
+      <Td onClick={onClickMarketDetails} fontWeight="bold" isNumeric>
+        {isLoadingMarketDetails ? (
+          <Skeleton>placeholder</Skeleton>
+        ) : (
+          marketDetails?.totalSupply
+        )}
       </Td>
-      <Td onClick={onClickMarketDetails} fontWeight="bold">
-        <Badge colorScheme="green" fontSize="md">
-          {pool.apy}
-        </Badge>
+      <Td onClick={onClickMarketDetails} fontWeight="bold" isNumeric>
+        {isLoadingMarketDetails ? (
+          <Skeleton>placeholder</Skeleton>
+        ) : (
+          <Badge colorScheme="green" fontSize="md">
+            {marketDetails?.apy}%
+          </Badge>
+        )}
       </Td>
-      <Td onClick={onClickMarketDetails} fontWeight="bold">
-        {pool.totalBorrow}
+      <Td onClick={onClickMarketDetails} fontWeight="bold" isNumeric>
+        {isLoadingMarketDetails ? (
+          <Skeleton>placeholder</Skeleton>
+        ) : (
+          marketDetails?.totalBorrow
+        )}
       </Td>
-      <Td onClick={onClickMarketDetails} fontWeight="bold">
-        <Badge colorScheme="red" fontSize="md">
-          {pool.borrowApy}
-        </Badge>
+      <Td onClick={onClickMarketDetails} fontWeight="bold" isNumeric>
+        {isLoadingMarketDetails ? (
+          <Skeleton>placeholder</Skeleton>
+        ) : (
+          <Badge colorScheme="red" fontSize="md">
+            {marketDetails?.borrowApy}%
+          </Badge>
+        )}
       </Td>
-      <Td onClick={onClickMarketDetails} fontWeight="bold">
-        {pool.availableLending}
+      <Td onClick={onClickMarketDetails} fontWeight="bold" isNumeric>
+        {isLoadingMarketDetails ? (
+          <Skeleton>placeholder</Skeleton>
+        ) : (
+          marketDetails?.totalCash
+        )}
       </Td>
-
       <Td>
         <VStack>
           <Button
@@ -94,7 +126,10 @@ export const AssetTableRow = ({ pool }: AssetTableRowProps) => {
             variant="outline"
             fontSize="sm"
             colorScheme="green"
-            onClick={() => onOpenSupply()}
+            onClick={() => {
+              mutate();
+              onOpenSupply();
+            }}
           >
             Supply
           </Button>

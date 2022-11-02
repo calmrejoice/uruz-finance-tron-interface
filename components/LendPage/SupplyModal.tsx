@@ -3,12 +3,10 @@ import {
   Badge,
   Box,
   Button,
-  Divider,
   Flex,
   FormControl,
   FormHelperText,
   FormLabel,
-  Heading,
   HStack,
   IconButton,
   Image,
@@ -27,22 +25,160 @@ import {
   Text,
   useColorMode,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import { IoCartSharp } from "react-icons/io5";
 
-import { IPool } from "@constants/mockLendingPools";
-import { BRAND_COLOR } from "@styles/styleConstants";
 import { TabHeading } from "./TabHeading";
+import { useAuth } from "@context/AuthContext";
+import { IMarketDetails } from "@constants/IMarketDetails";
+import { IMarket } from "@constants/IMarket";
+import { useBalance } from "@hooks/useBalance";
+import { onSupply, useSupplied } from "@hooks/useSupply";
+import { config } from "@constants/config";
+import { es } from "date-fns/locale";
+import { ToastLinkButton } from "@components/Shared/ToastLinkButton";
+import { onWithdraw } from "@hooks/useWithdraw";
+import { useBorrowLimit } from "@hooks/useBorrow";
 
 type SupplyModalProps = {
   isOpen: any;
   onClose: any;
-  pool: IPool | undefined;
+  marketDetails: IMarketDetails | undefined;
+  market: IMarket;
 };
 
-export const SupplyModal = ({ isOpen, onClose, pool }: SupplyModalProps) => {
+export const SupplyModal = ({
+  isOpen,
+  onClose,
+  marketDetails,
+  market,
+}: SupplyModalProps) => {
+  const { tron, address } = useAuth();
   const [tab, setTab] = useState("supply");
   const { colorMode } = useColorMode();
+  const isTrx = market?.collateralSymbol === "TRX";
+  const tokenAddress = isTrx ? undefined : market?.collateralAddress;
+  const balance: any = useBalance(
+    tron,
+    address,
+    false,
+    tokenAddress,
+    isTrx,
+    marketDetails?.totalCash
+  );
+
+  const utokenBalance: any = useBalance(
+    tron,
+    address,
+    true,
+    tokenAddress,
+    isTrx,
+    marketDetails?.totalCash
+  );
+
+  const supplied =
+    useSupplied(
+      tron,
+      market?.utokenAddress,
+      address,
+      isTrx,
+      marketDetails?.totalCash
+    ) || 0;
+  const [isLoading, setIsLoading] = useState(false);
+  const [supplyAmount, setSupplyAmount] = useState<number>();
+  const toast = useToast();
+  const handleSupply = async () => {
+    if (!supplyAmount) return;
+    setIsLoading(true);
+
+    const res = await onSupply(
+      tron,
+      market?.utokenAddress,
+      supplyAmount,
+      isTrx
+    );
+
+    if (res.success === false) {
+      toast({
+        title: "Transaction failed.",
+        description: `Error: ${res.error}`,
+        status: "error",
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Transaction successful",
+        description: ToastLinkButton(res),
+        status: "success",
+        isClosable: true,
+      });
+    }
+    setIsLoading(false);
+    onClose();
+  };
+
+  const [withdrawAmount, setWithdrawAmount] = useState<number>();
+  const handleWithdraw = async () => {
+    if (!withdrawAmount) return;
+    setIsLoading(true);
+
+    const res = await onWithdraw(
+      tron,
+      market?.utokenAddress,
+      withdrawAmount,
+      isTrx
+    );
+
+    if (res.success === false) {
+      toast({
+        title: "Transaction failed.",
+        description: `Error: ${res.error}`,
+        status: "error",
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Transaction successful",
+        description: ToastLinkButton(res),
+        status: "success",
+        isClosable: true,
+      });
+    }
+    setIsLoading(false);
+    onClose();
+  };
+
+  const handleMaxSupply = () => {
+    isTrx
+      ? setSupplyAmount(balance?.available)
+      : setSupplyAmount(balance?.balanceNum);
+  };
+
+  const handleMaxWithdraw = () => {
+    setWithdrawAmount(utokenBalance?.balanceNum);
+  };
+
+  const renderBalance = () => {
+    let tokenBal = 0;
+
+    if (tab === "supply") {
+      if (isTrx) {
+        tokenBal = balance?.available;
+      } else {
+        tokenBal = balance?.balanceNum;
+      }
+    } else {
+      // Withdraw tab
+      tokenBal = utokenBalance?.displayBalance;
+    }
+
+    return (
+      <Text display="inline" fontWeight="bold">
+        {tokenBal}
+      </Text>
+    );
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -50,10 +186,10 @@ export const SupplyModal = ({ isOpen, onClose, pool }: SupplyModalProps) => {
       <ModalContent>
         <ModalHeader>
           <HStack>
-            <Image src={pool?.assetImage} boxSize="30px" />
+            <Image src={market?.assetImage} boxSize="30px" alt="asset logo" />
             <VStack alignItems="left" spacing="0" fontWeight="bold">
-              <Text fontSize="md">{pool?.symbol}</Text>
-              <Text variant="helper">{pool?.assetName}</Text>
+              <Text fontSize="md">{market?.collateralName}</Text>
+              <Text variant="helper">{market?.collateralName}</Text>
             </VStack>
           </HStack>
         </ModalHeader>
@@ -64,15 +200,15 @@ export const SupplyModal = ({ isOpen, onClose, pool }: SupplyModalProps) => {
             <Text variant="helper">Supplied</Text>
             <Spacer />
 
-            <Text>0.00</Text>
-            <Text>{pool?.symbol}</Text>
+            <Text>{supplied}</Text>
+            <Text>{market?.collateralSymbol}</Text>
           </HStack>
 
           <HStack my="1">
             <Text variant="helper">Supply APY</Text>
             <Spacer />
 
-            <Badge colorScheme="green">{pool?.apy}</Badge>
+            <Badge colorScheme="green">{marketDetails?.apy}</Badge>
           </HStack>
 
           <HStack fontWeight="bold">
@@ -80,7 +216,7 @@ export const SupplyModal = ({ isOpen, onClose, pool }: SupplyModalProps) => {
             <Spacer />
 
             <Text>363.60M</Text>
-            <Text>{pool?.symbol}</Text>
+            <Text>{market?.collateralSymbol}</Text>
           </HStack>
 
           <Box
@@ -116,17 +252,25 @@ export const SupplyModal = ({ isOpen, onClose, pool }: SupplyModalProps) => {
                       icon={<IoCartSharp />}
                       size="sm"
                     />
-                    <Text display="inline" fontWeight="bold">
-                      0.000
+                    {renderBalance()}
+
+                    <Text>
+                      {tab === "supply"
+                        ? market?.collateralSymbol
+                        : `u${market?.collateralSymbol}`}
                     </Text>
-                    <Text>{pool?.symbol} </Text>
                   </HStack>
                 </FormLabel>
                 <InputGroup>
                   <InputLeftElement>
-                    <Image src={pool?.assetImage} boxSize="20px" />
+                    <Image
+                      src={market?.assetImage}
+                      boxSize="20px"
+                      alt="asset logo"
+                    />
                   </InputLeftElement>
                   <Input
+                    min="0"
                     type="number"
                     fontSize="sm"
                     variant="filled"
@@ -138,6 +282,12 @@ export const SupplyModal = ({ isOpen, onClose, pool }: SupplyModalProps) => {
                         ? "Enter supply amount"
                         : "Enter withdraw amount"
                     }
+                    value={tab === "supply" ? supplyAmount : withdrawAmount}
+                    onChange={(e) =>
+                      tab === "supply"
+                        ? setSupplyAmount(parseFloat(e.target.value))
+                        : setWithdrawAmount(parseFloat(e.target.value))
+                    }
                   />
                   <InputRightElement>
                     <Text
@@ -145,6 +295,9 @@ export const SupplyModal = ({ isOpen, onClose, pool }: SupplyModalProps) => {
                       pr="3"
                       fontSize="sm"
                       textDecor="underline"
+                      onClick={
+                        tab === "supply" ? handleMaxSupply : handleMaxWithdraw
+                      }
                     >
                       Max
                     </Text>
@@ -156,8 +309,15 @@ export const SupplyModal = ({ isOpen, onClose, pool }: SupplyModalProps) => {
                 </FormHelperText>
               </FormControl>
 
-              <Button width="100%" my="6">
-                {tab === "supply" ? "Supply" : "Withdraw"} {pool?.symbol}
+              <Button
+                width="100%"
+                my="6"
+                onClick={tab === "supply" ? handleSupply : handleWithdraw}
+                isLoading={isLoading}
+                // isDisabled={!supplyAmount}
+              >
+                {tab === "supply" ? "Supply" : "Withdraw"}{" "}
+                {market?.collateralSymbol}
               </Button>
             </Flex>
           </Box>

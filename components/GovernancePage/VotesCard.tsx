@@ -30,7 +30,7 @@ export const VotesCard = () => {
         <Text variant="helper">URZ Balance</Text>
         <Spacer />
         <HStack my="6">
-          <Image src="/tokens/urz.png" boxSize="20px" />
+          <Image src="/tokens/urz.png" boxSize="20px" alt="urz logo" />
           <Text fontWeight="bold">0 URZ</Text>
         </HStack>
       </HStack>

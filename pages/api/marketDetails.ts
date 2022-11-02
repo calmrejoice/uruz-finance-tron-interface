@@ -4,24 +4,31 @@ import { getUTokenDetails } from "client/queries";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { query } = req;
-  const { tokenSymbol } = query;
+  const { tokenSymbol }: any = query;
 
   try {
     if (!tokenSymbol) return;
-    const { marketDetails } = config;
+    const { markets } = config;
     const {
       collateralAddress,
       collateralName,
       collateralSymbol,
+      collateralDecimals,
+      assetImage,
       utokenAddress,
-      collateralDecimal,
     } =
-      marketDetails.filter(
-        (market) => market.collateralSymbol === tokenSymbol
+      markets.filter(
+        (market) =>
+          market.collateralSymbol.toUpperCase() === tokenSymbol.toUpperCase()
       )[0] || {};
 
-    const { totalBorrow, reserveFactor, totalReserves, totalSupply } =
-      (await getUTokenDetails(utokenAddress)) || {};
+    const {
+      totalBorrow,
+      reserveFactor,
+      totalReserves,
+      totalSupply,
+      totalCash,
+    } = (await getUTokenDetails(utokenAddress, collateralDecimals)) || {};
 
     const result = {
       utokenAddress,
@@ -32,17 +39,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       totalSupply,
       totalReserves,
       reserveFactor,
-      collateralDecimal,
+      totalCash,
+      assetImage,
+      apy: 0.02,
+      borrowApy: 0.11,
       //   borrowPaused: 0,
       //   depositHeadcount: 11125,
       //   borrowedUSD: "8361240.34175388",
       //   collateralFactor: 0.75,
-      //   totalCash: "350153749589758",
       //   model: [],
-      //   depositedAPY: "0.02980902",
       //   priceUSD: "0.06141627",
       //   borrowLimit: "0.000000",
-      //   borrowedAPY: "0.11813139",
       //   borrowHeadcount: 527,
       //   oneToExchangeRate: "98.07767754",
       //   depositedUSD: "29821577.45688939",

@@ -29,19 +29,44 @@ import {
 } from "@chakra-ui/react";
 
 import { IoCartSharp } from "react-icons/io5";
-import { IPool } from "@constants/mockLendingPools";
 import { TabHeading } from "./TabHeading";
+import { IMarketDetails } from "@constants/IMarketDetails";
+import { IMarket } from "@constants/IMarket";
+import { useBalance } from "@hooks/useBalance";
+import { useAuth } from "@context/AuthContext";
+import { useBorrowLimit } from "@hooks/useBorrow";
 
 type BorrowModalProps = {
   isOpen: any;
   onClose: any;
-  pool: IPool | undefined;
+  market: IMarket;
+  marketDetails: IMarketDetails | undefined;
 };
 
-export const BorrowModal = ({ isOpen, onClose, pool }: BorrowModalProps) => {
+export const BorrowModal = ({
+  isOpen,
+  onClose,
+  marketDetails,
+  market,
+}: BorrowModalProps) => {
   const [tab, setTab] = useState("borrow");
 
   const { colorMode } = useColorMode();
+  const { tron, address } = useAuth();
+
+  const isTrx = market?.collateralSymbol === "TRX";
+  const tokenAddress = isTrx ? undefined : market?.collateralAddress;
+
+  const balance: any = useBalance(
+    tron,
+    address,
+    false,
+    tokenAddress,
+    isTrx,
+    marketDetails?.totalCash
+  );
+
+  // const { borrowDisplayLimit, borrowLimit } = useBorrowLimit(tron, address);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -49,10 +74,10 @@ export const BorrowModal = ({ isOpen, onClose, pool }: BorrowModalProps) => {
       <ModalContent>
         <ModalHeader>
           <HStack>
-            <Image src={pool?.assetImage} boxSize="30px" />
+            <Image src={market?.assetImage} boxSize="30px" alt="asset logo" />
             <VStack alignItems="left" spacing="0" fontWeight="bold">
-              <Text fontSize="md">{pool?.symbol}</Text>
-              <Text variant="helper">{pool?.assetName}</Text>
+              <Text fontSize="md">{market?.collateralSymbol}</Text>
+              <Text variant="helper">{market?.collateralName}</Text>
             </VStack>
           </HStack>
         </ModalHeader>
@@ -75,7 +100,7 @@ export const BorrowModal = ({ isOpen, onClose, pool }: BorrowModalProps) => {
             <Text variant="helper">Borrow APY</Text>
             <Spacer />
 
-            <Badge colorScheme="red">{pool?.borrowApy}</Badge>
+            <Badge colorScheme="red">{marketDetails?.borrowApy}</Badge>
           </HStack>
 
           <HStack fontWeight="bold">
@@ -83,7 +108,7 @@ export const BorrowModal = ({ isOpen, onClose, pool }: BorrowModalProps) => {
             <Spacer />
 
             <Text>363.60M</Text>
-            <Text>{pool?.symbol}</Text>
+            <Text>{market?.collateralSymbol}</Text>
           </HStack>
 
           <Box
@@ -120,14 +145,20 @@ export const BorrowModal = ({ isOpen, onClose, pool }: BorrowModalProps) => {
                       size="sm"
                     />
                     <Text display="inline" fontWeight="bold">
-                      0.000
+                      {market?.collateralSymbol === "TRX"
+                        ? balance?.available
+                        : balance?.balanceNum}
                     </Text>
-                    <Text>{pool?.symbol} </Text>
+                    <Text>{market?.collateralSymbol} </Text>
                   </HStack>
                 </FormLabel>
                 <InputGroup>
                   <InputLeftElement>
-                    <Image src={pool?.assetImage} boxSize="20px" />
+                    <Image
+                      src={market?.assetImage}
+                      boxSize="20px"
+                      alt="asset logo"
+                    />
                   </InputLeftElement>
                   <Input
                     type="number"
@@ -161,7 +192,8 @@ export const BorrowModal = ({ isOpen, onClose, pool }: BorrowModalProps) => {
               </FormControl>
 
               <Button width="100%" my="6">
-                {tab === "borrow" ? "Borrow" : "Repay"} {pool?.symbol}
+                {tab === "borrow" ? "Borrow" : "Repay"}{" "}
+                {market?.collateralSymbol}
               </Button>
             </Flex>
           </Box>
