@@ -183,15 +183,15 @@ export const SupplyModal = ({
   const handleApprove = async () => {
     setIsLoading(true);
     // @ts-ignore
-    const res: string = await onApprove(
+    const res: any = await onApprove(
       tron,
       market?.collateralAddress,
       market?.utokenAddress
     );
-    if (res == "Confirmation declined by user") {
+    if (res.success === false) {
       toast({
-        title: "Transaction failed",
-        description: "Confirmation declined by user",
+        title: "Transaction failed.",
+        description: `Error: ${res.error}`,
         status: "error",
         isClosable: true,
       });
@@ -227,7 +227,7 @@ export const SupplyModal = ({
           onClick={handleApprove}
           isLoading={isLoading}
         >
-          Approve {marketDetails?.collateralSymbol}
+          Approve {market?.collateralSymbol}
         </Button>
       );
     }

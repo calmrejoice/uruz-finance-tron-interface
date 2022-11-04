@@ -38,6 +38,7 @@ import { useAuth } from "@context/AuthContext";
 import { onBorrow, useBorrowedBalance, useBorrowLimit } from "@hooks/useBorrow";
 import { ToastLinkButton } from "@components/Shared/ToastLinkButton";
 import { onRepay } from "@hooks/useRepay";
+import { onApprove, useApprovalStatus } from "@hooks/useApprove";
 
 type BorrowModalProps = {
   isOpen: any;
@@ -144,6 +145,66 @@ export const BorrowModal = ({
 
   const handleMaxRepay = () => {
     setRepayAmount(borrowedBalance);
+  };
+
+  const isApproved = useApprovalStatus(
+    tron,
+    market?.utokenAddress,
+    address,
+    market?.utokenAddress
+  );
+
+  const handleApprove = async () => {
+    setIsLoading(true);
+    // @ts-ignore
+    const res: any = await onApprove(
+      tron,
+      market?.utokenAddress,
+      market?.utokenAddress
+    );
+    if (res.success === false) {
+      toast({
+        title: "Transaction failed.",
+        description: `Error: ${res.error}`,
+        status: "error",
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Transaction successful",
+        description: ToastLinkButton(res),
+        status: "success",
+        isClosable: true,
+      });
+    }
+    setIsLoading(false);
+  };
+
+  const renderButton = () => {
+    if (isApproved) {
+      return (
+        <Button
+          width="100%"
+          my="6"
+          onClick={tab === "borrow" ? handleBorrow : handleRepay}
+          isLoading={isLoading}
+        >
+          {tab === "borrow" ? "Borrow" : "Repay"} {market?.collateralSymbol}
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          width="100%"
+          my="6"
+          onClick={handleApprove}
+          isLoading={isLoading}
+          disabled={isApproved === undefined}
+        >
+          Approve u{market?.collateralSymbol}
+        </Button>
+      );
+    }
   };
 
   return (
@@ -272,15 +333,7 @@ export const BorrowModal = ({
                 </FormHelperText>
               </FormControl>
 
-              <Button
-                width="100%"
-                my="6"
-                onClick={tab === "borrow" ? handleBorrow : handleRepay}
-                isLoading={isLoading}
-              >
-                {tab === "borrow" ? "Borrow" : "Repay"}{" "}
-                {market?.collateralSymbol}
-              </Button>
+              {renderButton()}
             </Flex>
           </Box>
         </ModalBody>

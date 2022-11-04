@@ -1,13 +1,9 @@
-import { Divider, Flex, Heading, Text, VStack } from "@chakra-ui/react";
-import { numberWithCommas } from "@utils/formatBalance";
-
 import { Card } from "@components/Shared/Card";
 import { LendStat } from "./LendStat";
 import { useLendStats } from "@hooks/swrHooks";
 
 export const LendStats = () => {
   const { lendStats, isLoadingLendStats } = useLendStats();
-  console.log(lendStats);
 
   return (
     <Card>

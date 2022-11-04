@@ -17,7 +17,7 @@ export const onApprove = async (
 
     return result;
   } catch (error) {
-    return error;
+    return { success: false, error };
   }
 };
 
@@ -26,12 +26,12 @@ export const useApprovalStatus = (
   tokenAddress: string,
   ownerAddress: string,
   spenderAddress: string,
-  isTrx: boolean
+  isTrx: boolean = false
 ) => {
   if (!tronWeb) return;
   if (isTrx) return true;
 
-  const [isApproved, setIsApproved] = useState(false);
+  const [isApproved, setIsApproved] = useState<boolean>();
   useEffect(() => {
     if (!tronWeb || !tokenAddress || !ownerAddress || !spenderAddress) return;
 
