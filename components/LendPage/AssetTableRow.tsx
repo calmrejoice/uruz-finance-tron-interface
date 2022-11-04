@@ -84,7 +84,7 @@ export const AssetTableRow = ({ market }: AssetTableRowProps) => {
         {isLoadingMarketDetails ? (
           <Skeleton>placeholder</Skeleton>
         ) : (
-          marketDetails?.totalSupply
+          "$" + marketDetails?.totalSupplyInUsd
         )}
       </Td>
       <Td onClick={onClickMarketDetails} fontWeight="bold" isNumeric>
@@ -100,7 +100,7 @@ export const AssetTableRow = ({ market }: AssetTableRowProps) => {
         {isLoadingMarketDetails ? (
           <Skeleton>placeholder</Skeleton>
         ) : (
-          marketDetails?.totalBorrow
+          "$" + marketDetails?.totalBorrowedInUsd
         )}
       </Td>
       <Td onClick={onClickMarketDetails} fontWeight="bold" isNumeric>
@@ -116,7 +116,14 @@ export const AssetTableRow = ({ market }: AssetTableRowProps) => {
         {isLoadingMarketDetails ? (
           <Skeleton>placeholder</Skeleton>
         ) : (
-          marketDetails?.totalCash
+          marketDetails?.totalCash + " " + market?.collateralSymbol
+        )}
+      </Td>
+      <Td onClick={onClickMarketDetails} fontWeight="bold" isNumeric>
+        {isLoadingMarketDetails ? (
+          <Skeleton>placeholder</Skeleton>
+        ) : (
+          "$" + marketDetails?.priceUsd
         )}
       </Td>
       <Td>

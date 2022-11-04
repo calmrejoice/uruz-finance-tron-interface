@@ -7,6 +7,8 @@ import {
   Th,
   Td,
   TableContainer,
+  Spinner,
+  Center,
 } from "@chakra-ui/react";
 
 import { AssetTableRow } from "./AssetTableRow";
@@ -27,6 +29,7 @@ export const LendingPools = () => {
               <Th>Total Borrow</Th>
               <Th>Borrow APY</Th>
               <Th>Available Lending</Th>
+              <Th>Price</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
