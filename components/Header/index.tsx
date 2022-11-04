@@ -36,13 +36,6 @@ export const Header = () => {
 
   const toast = useToast();
 
-  const isApproved = useApprovalStatus(
-    tron,
-    config.urzAddress,
-    address,
-    config.uurzAddress
-  );
-
   const handleApprove = async () => {
     setIsLoading(true);
 

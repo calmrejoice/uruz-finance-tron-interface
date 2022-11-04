@@ -25,9 +25,11 @@ export const useApprovalStatus = (
   tronWeb: any,
   tokenAddress: string,
   ownerAddress: string,
-  spenderAddress: string
+  spenderAddress: string,
+  isTrx: boolean
 ) => {
   if (!tronWeb) return;
+  if (isTrx) return true;
 
   const [isApproved, setIsApproved] = useState(false);
   useEffect(() => {
@@ -40,6 +42,7 @@ export const useApprovalStatus = (
         .call();
 
       const approved = approvalAmount >= config.unlimitedApprovalAmount;
+
       setIsApproved(approved);
     };
     getApprovalAmount().catch((e) => {});

@@ -26,6 +26,8 @@ import {
   useColorMode,
   VStack,
   useToast,
+  Spinner,
+  Center,
 } from "@chakra-ui/react";
 import { IoCartSharp } from "react-icons/io5";
 
@@ -37,7 +39,7 @@ import { useBalance, useUTokenBalance } from "@hooks/useBalance";
 import { onSupply, useSupplied } from "@hooks/useSupply";
 import { ToastLinkButton } from "@components/Shared/ToastLinkButton";
 import { onWithdraw } from "@hooks/useWithdraw";
-import { useApprovalStatus } from "@hooks/useApprove";
+import { onApprove, useApprovalStatus } from "@hooks/useApprove";
 
 type SupplyModalProps = {
   isOpen: any;
@@ -174,10 +176,62 @@ export const SupplyModal = ({
     tron,
     market?.collateralAddress,
     address,
-    market?.utokenAddress
+    market?.utokenAddress,
+    isTrx
   );
 
-  console.log(isApproved);
+  const handleApprove = async () => {
+    setIsLoading(true);
+    // @ts-ignore
+    const res: string = await onApprove(
+      tron,
+      market?.collateralAddress,
+      market?.utokenAddress
+    );
+    if (res == "Confirmation declined by user") {
+      toast({
+        title: "Transaction failed",
+        description: "Confirmation declined by user",
+        status: "error",
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Transaction successful",
+        description: ToastLinkButton(res),
+        status: "success",
+        isClosable: true,
+      });
+    }
+    setIsLoading(false);
+  };
+
+  const renderButton = () => {
+    if (isApproved) {
+      return (
+        <Button
+          width="100%"
+          my="6"
+          onClick={tab === "supply" ? handleSupply : handleWithdraw}
+          isLoading={isLoading}
+          // isDisabled={!supplyAmount}
+        >
+          {tab === "supply" ? "Supply" : "Withdraw"} {market?.collateralSymbol}
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          width="100%"
+          my="6"
+          onClick={handleApprove}
+          isLoading={isLoading}
+        >
+          Approve {marketDetails?.collateralSymbol}
+        </Button>
+      );
+    }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -308,16 +362,7 @@ export const SupplyModal = ({
                 </FormHelperText>
               </FormControl>
 
-              <Button
-                width="100%"
-                my="6"
-                onClick={tab === "supply" ? handleSupply : handleWithdraw}
-                isLoading={isLoading}
-                // isDisabled={!supplyAmount}
-              >
-                {tab === "supply" ? "Supply" : "Withdraw"}{" "}
-                {market?.collateralSymbol}
-              </Button>
+              {renderButton()}
             </Flex>
           </Box>
         </ModalBody>
