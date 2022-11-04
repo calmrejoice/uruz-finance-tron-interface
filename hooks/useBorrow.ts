@@ -65,7 +65,7 @@ export const useBorrowLimit = (tronWeb: any, accountAddress: string) => {
       const data = await contract.getAccountLiquidity(accountAddress).call();
 
       const borrowLimitRaw = data[1];
-      console.log(borrowLimitRaw.toString(), "");
+      console.log(borrowLimitRaw.toString(), "borrow limit");
 
       setBorrowLimit(formatBalance(borrowLimitRaw, config.trc20TokenDecimals));
       setBorrowDisplayLimit(

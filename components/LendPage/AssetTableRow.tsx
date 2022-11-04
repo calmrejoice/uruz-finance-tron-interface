@@ -12,12 +12,12 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 import { IMarket } from "@constants/IMarket";
-import { useMarketStats } from "@context/MarketStatsContext";
+import { useAuth } from "@context/AuthContext";
 
 import { useMarketDetails } from "@hooks/swrHooks";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { BorrowModal } from "./BorrowModal";
+import { CheckNetworkModal } from "./CheckNetworkModal";
 import { SupplyModal } from "./SupplyModal";
 
 type AssetTableRowProps = {
@@ -25,15 +25,13 @@ type AssetTableRowProps = {
 };
 
 export const AssetTableRow = ({ market }: AssetTableRowProps) => {
+  const { network, tron } = useAuth();
+
+  const isNile = network === "https://api.nileex.io";
+
   const { marketDetails, isLoadingMarketDetails, mutate } = useMarketDetails(
     market.collateralSymbol
   );
-
-  // To count total supply in main page
-  // const { addSupplyArray } = useMarketStats();
-  // useEffect(() => {
-  //   addSupplyArray(marketDetails?.totalSupplyInUsd);
-  // }, [marketDetails]);
 
   const {
     isOpen: isOpenSupply,
@@ -45,6 +43,12 @@ export const AssetTableRow = ({ market }: AssetTableRowProps) => {
     isOpen: isOpenBorrow,
     onClose: onCloseBorrow,
     onOpen: onOpenBorrow,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenCheckNetwork,
+    onClose: onCloseCheckNetwork,
+    onOpen: onOpenCheckNetwork,
   } = useDisclosure();
 
   const router = useRouter();
@@ -65,6 +69,10 @@ export const AssetTableRow = ({ market }: AssetTableRowProps) => {
         cursor: "pointer",
       }}
     >
+      <CheckNetworkModal
+        isOpen={isOpenCheckNetwork}
+        onClose={onCloseCheckNetwork}
+      />
       <SupplyModal
         isOpen={isOpenSupply}
         onClose={onCloseSupply}
@@ -142,8 +150,7 @@ export const AssetTableRow = ({ market }: AssetTableRowProps) => {
             fontSize="sm"
             colorScheme="green"
             onClick={() => {
-              mutate();
-              onOpenSupply();
+              isNile ? onOpenSupply() : onOpenCheckNetwork();
             }}
           >
             Supply
@@ -153,7 +160,9 @@ export const AssetTableRow = ({ market }: AssetTableRowProps) => {
             variant="outline"
             fontSize="sm"
             colorScheme="red"
-            onClick={() => onOpenBorrow()}
+            onClick={() => {
+              isNile ? onOpenBorrow() : onOpenCheckNetwork();
+            }}
           >
             Borrow
           </Button>

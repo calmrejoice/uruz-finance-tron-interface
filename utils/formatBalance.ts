@@ -43,8 +43,6 @@ export function convertToUnderlyingBalance(
 
   // @ts-ignore
   const oneUTokenInUnderlying = exchangeRate / Math.pow(10, mantissa);
-  console.log("1 utoken can be redeemed for", oneUTokenInUnderlying, "token");
-
   const amountOfUTokens = formatBalance(utokensBN, config.utokenDecimals);
   const underlyingBalance = amountOfUTokens * oneUTokenInUnderlying;
 

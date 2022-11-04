@@ -35,11 +35,9 @@ import { IMarketDetails } from "@constants/IMarketDetails";
 import { IMarket } from "@constants/IMarket";
 import { useBalance, useUTokenBalance } from "@hooks/useBalance";
 import { onSupply, useSupplied } from "@hooks/useSupply";
-import { config } from "@constants/config";
-import { es } from "date-fns/locale";
 import { ToastLinkButton } from "@components/Shared/ToastLinkButton";
 import { onWithdraw } from "@hooks/useWithdraw";
-import { useBorrowLimit } from "@hooks/useBorrow";
+import { useApprovalStatus } from "@hooks/useApprove";
 
 type SupplyModalProps = {
   isOpen: any;
@@ -171,6 +169,15 @@ export const SupplyModal = ({
       </Text>
     );
   };
+
+  const isApproved = useApprovalStatus(
+    tron,
+    market?.collateralAddress,
+    address,
+    market?.utokenAddress
+  );
+
+  console.log(isApproved);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

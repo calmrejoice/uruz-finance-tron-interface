@@ -34,15 +34,24 @@ export const AuthProvider = ({ children }: any) => {
   useEffect(() => {
     if (window) {
       const { tronWeb } = window as any;
-      if (tronWeb) {
-        setTron(tronWeb);
-        setInstalled(true);
-        setName(tronWeb.defaultAddress.name);
-        setAddress(tronWeb.defaultAddress.base58);
-        setNetwork(tronWeb.fullNode.host);
-      }
+      const setDetails = () => {
+        if (tronWeb) {
+          setTron(tronWeb);
+          setInstalled(true);
+          setName(tronWeb.defaultAddress.name);
+          setAddress(tronWeb.defaultAddress.base58);
+          setNetwork(tronWeb.fullNode.host);
+        }
+      };
+      const interval = setInterval(async () => {
+        setDetails();
+        //wallet checking interval 2sec
+      }, 2000);
+      return () => {
+        clearInterval(interval);
+      };
     }
-  }, [tron, ready, name, address, network, installed, trxBalance]);
+  }, []);
 
   const onConnectWallet = async () => {
     const res = await tron?.request({ method: "tron_requestAccounts" });
