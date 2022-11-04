@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Button,
   Flex,
@@ -9,24 +8,18 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Card } from "@components/Shared/Card";
-import { IPool, mockLendingPools } from "@constants/mockLendingPools";
 import { useRouter } from "next/router";
 import { MarketInfoItem } from "./MarketInfoItem";
 import { SupplyModal } from "@components/LendPage/SupplyModal";
 import { BorrowModal } from "@components/LendPage/BorrowModal";
 import { useMarketDetails, useMarkets } from "@hooks/swrHooks";
+import { formatDisplayBalance } from "@utils/formatBalance";
 
 export const MarketInfoCard = () => {
   const router = useRouter();
 
   const { query } = router;
   const { tokenSymbol }: any = query;
-
-  const [pool, setPool] = useState<IPool | undefined>();
-
-  useEffect(() => {
-    setPool(mockLendingPools.filter((pool) => pool.symbol === tokenSymbol)[0]);
-  }, [tokenSymbol]);
 
   const {
     isOpen: isOpenSupply,
@@ -48,6 +41,18 @@ export const MarketInfoCard = () => {
   const { marketDetails, isLoadingMarketDetails, mutate } =
     useMarketDetails(tokenSymbol);
 
+  console.log(isLoadingMarketDetails);
+  console.log(marketDetails);
+
+  // const { tokenPrice } = useTokensPrice(tokenSymbol);
+
+  // const totalSuppliedInUnderlying =
+  //   marketDetails?.totalSupply / marketDetails?.oneToExchangeRate;
+  // const totalSupplyInUsd = totalSuppliedInUnderlying * parseFloat(tokenPrice);
+
+  // const totalBorrowedInUsd =
+  //   marketDetails?.totalBorrow * parseFloat(tokenPrice);
+
   return (
     <Card flexDir="column" flex={1}>
       <SupplyModal
@@ -64,42 +69,67 @@ export const MarketInfoCard = () => {
       />
       <HStack spacing="6">
         <HStack>
-          <Image src={pool?.assetImage} boxSize="30" alt="asset logo" />
+          <Image src={market?.assetImage} boxSize="30" alt="asset logo" />
           <Flex flexDir="column">
-            <Text fontWeight="bold">{pool?.symbol}</Text>
-            <Text variant="helper">{pool?.assetName}</Text>
+            <Text fontWeight="bold">{market?.collateralSymbol}</Text>
+            <Text variant="helper">{market?.collateralName}</Text>
           </Flex>
         </HStack>
       </HStack>
 
       <SimpleGrid columns={2} my="6">
-        <MarketInfoItem title="Total Supply" details={pool?.totalSupply} />
-        <MarketInfoItem title="Total Borrow" details={pool?.totalBorrow} />
-        <MarketInfoItem title="Price" details={pool?.tokenPrice} />
-        <MarketInfoItem title="Borrow cap" details={pool?.borrowCap} />
-        <MarketInfoItem title="Suppliers" details={pool?.supplierCount} />
-        <MarketInfoItem title="Borrowers" details={pool?.borrowerCount} />
+        <MarketInfoItem
+          title="Total Supply"
+          details={`$${marketDetails?.totalSupplyInUsd}`}
+          isLoading={isLoadingMarketDetails}
+        />
+        <MarketInfoItem
+          title="Total Borrow"
+          details={`$${marketDetails?.totalBorrowedInUsd}`}
+          isLoading={isLoadingMarketDetails}
+        />
+        <MarketInfoItem
+          title="Price"
+          details={`$${marketDetails?.priceUsd}`}
+          isLoading={isLoadingMarketDetails}
+        />
+        {/* <MarketInfoItem title="Borrow cap" details={pool?.borrowCap} /> */}
+        {/* <MarketInfoItem title="Suppliers" details={pool?.supplierCount} />
+        <MarketInfoItem title="Borrowers" details={pool?.borrowerCount} /> */}
         <MarketInfoItem
           title="Available lending"
-          details={pool?.availableLending}
+          details={`${marketDetails?.totalCash} TRX`}
+          isLoading={isLoadingMarketDetails}
         />
         <MarketInfoItem
           title="Total interest / Day"
-          details={pool?.totalInterestPerDay}
+          details={`$${marketDetails?.earnUsdPerDay}`}
+          isLoading={isLoadingMarketDetails}
         />
-        <MarketInfoItem title="Reserve amount" details={pool?.totalReserves} />
-        <MarketInfoItem title="Reserve factor" details={pool?.reserveFactor} />
         <MarketInfoItem
-          title={`u${pool?.symbol} minted`}
-          details={pool?.totalDistributed}
+          title="Reserve amount"
+          details={`${marketDetails?.totalReserves} ${tokenSymbol}`}
+          isLoading={isLoadingMarketDetails}
+        />
+        <MarketInfoItem
+          title="Reserve factor"
+          details={`${marketDetails?.reserveFactor * 100}%`}
+          isLoading={isLoadingMarketDetails}
+        />
+        <MarketInfoItem
+          title={`u${tokenSymbol} minted`}
+          details={formatDisplayBalance(marketDetails?.totalSupply, 0)}
+          isLoading={isLoadingMarketDetails}
         />
         <MarketInfoItem
           title="Collateral factor"
-          details={pool?.collateralFactor}
+          details={`${marketDetails?.collateralFactor * 100}%`}
+          isLoading={isLoadingMarketDetails}
         />
         <MarketInfoItem
-          title={`u${pool?.symbol} exchange rate`}
-          details={pool?.exchangeRate}
+          title={`u${tokenSymbol} exchange rate`}
+          details={`1 ${tokenSymbol} : ${marketDetails?.oneToExchangeRate} u${tokenSymbol}`}
+          isLoading={isLoadingMarketDetails}
         />
       </SimpleGrid>
 
@@ -111,7 +141,7 @@ export const MarketInfoCard = () => {
           onClick={onOpenSupply}
           fontSize="sm"
         >
-          Supply {pool?.apy}
+          Supply {marketDetails?.apy}%
         </Button>
         <Button
           width="100%"
@@ -120,7 +150,7 @@ export const MarketInfoCard = () => {
           onClick={onOpenBorrow}
           fontSize="sm"
         >
-          Borrow {pool?.borrowApy}
+          Borrow {marketDetails?.borrowApy}%
         </Button>
       </HStack>
     </Card>

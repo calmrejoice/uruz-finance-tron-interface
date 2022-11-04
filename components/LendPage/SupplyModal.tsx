@@ -82,6 +82,7 @@ export const SupplyModal = ({
       isTrx,
       marketDetails?.totalCash
     ) || 0;
+
   const [isLoading, setIsLoading] = useState(false);
   const [supplyAmount, setSupplyAmount] = useState<number>();
   const toast = useToast();
@@ -147,9 +148,7 @@ export const SupplyModal = ({
   };
 
   const handleMaxSupply = () => {
-    isTrx
-      ? setSupplyAmount(balance?.available)
-      : setSupplyAmount(balance?.balanceNum);
+    setSupplyAmount(balance?.balanceNum);
   };
 
   const handleMaxWithdraw = () => {

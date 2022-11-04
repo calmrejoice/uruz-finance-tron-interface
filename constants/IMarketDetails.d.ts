@@ -3,6 +3,7 @@ export interface IMarketDetails {
   collateralSymbol: string;
   collateralAddress: string;
   collateralName: string;
+  collateralFactor: number;
   assetImage: string;
   totalBorrow: number;
   totalSupply: number;
@@ -11,4 +12,9 @@ export interface IMarketDetails {
   totalCash: number;
   apy: number;
   borrowApy: number;
+  oneToExchangeRate: number;
+  totalSupplyInUsd: number;
+  totalBorrowedInUsd: number;
+  earnUsdPerDay: number;
+  priceUsd: number;
 }

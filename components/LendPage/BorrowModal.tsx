@@ -25,6 +25,7 @@ import {
   Spacer,
   Text,
   useColorMode,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 
@@ -34,7 +35,9 @@ import { IMarketDetails } from "@constants/IMarketDetails";
 import { IMarket } from "@constants/IMarket";
 import { useBalance } from "@hooks/useBalance";
 import { useAuth } from "@context/AuthContext";
-import { useBorrowLimit } from "@hooks/useBorrow";
+import { onBorrow, useBorrowedBalance, useBorrowLimit } from "@hooks/useBorrow";
+import { ToastLinkButton } from "@components/Shared/ToastLinkButton";
+import { onRepay } from "@hooks/useRepay";
 
 type BorrowModalProps = {
   isOpen: any;
@@ -65,7 +68,83 @@ export const BorrowModal = ({
     marketDetails?.totalCash
   );
 
-  // const { borrowDisplayLimit, borrowLimit } = useBorrowLimit(tron, address);
+  const { borrowDisplayLimit, borrowLimit } = useBorrowLimit(tron, address);
+
+  const { borrowedDisplayBalance, borrowedBalance } = useBorrowedBalance(
+    tron,
+    address,
+    market?.utokenAddress,
+    isTrx,
+    marketDetails?.totalBorrow
+  );
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [borrowAmount, setBorrowAmount] = useState<number>();
+  const toast = useToast();
+  const handleBorrow = async () => {
+    if (!borrowAmount) return;
+    setIsLoading(true);
+
+    const res = await onBorrow(
+      tron,
+      market?.utokenAddress,
+      borrowAmount,
+      isTrx
+    );
+
+    if (res.success === false) {
+      toast({
+        title: "Transaction failed.",
+        description: `Error: ${res.error}`,
+        status: "error",
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Transaction successful",
+        description: ToastLinkButton(res),
+        status: "success",
+        isClosable: true,
+      });
+    }
+    setIsLoading(false);
+    onClose();
+  };
+
+  const [repayAmount, setRepayAmount] = useState<number>();
+  const handleRepay = async () => {
+    if (!repayAmount) return;
+    setIsLoading(true);
+    console.log(repayAmount);
+
+    const res = await onRepay(tron, market?.utokenAddress, repayAmount, isTrx);
+
+    if (res.success === false) {
+      toast({
+        title: "Transaction failed.",
+        description: `Error: ${res.error}`,
+        status: "error",
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Transaction successful",
+        description: ToastLinkButton(res),
+        status: "success",
+        isClosable: true,
+      });
+    }
+    setIsLoading(false);
+    onClose();
+  };
+
+  const handleMaxBorrow = () => {
+    setBorrowAmount(1);
+  };
+
+  const handleMaxRepay = () => {
+    setRepayAmount(borrowedBalance);
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -84,7 +163,7 @@ export const BorrowModal = ({
 
         <ModalBody>
           <HStack fontWeight="bold">
-            <Text variant="helper">Borrow limit</Text>
+            <Text variant="helper">Total borrowed</Text>
             <Spacer />
             <Text>$0</Text>
           </HStack>
@@ -135,18 +214,11 @@ export const BorrowModal = ({
               <FormControl>
                 <FormLabel fontWeight="semibold" fontSize="sm" mx="0">
                   <HStack spacing="1">
-                    <Text variant="helper">Wallet balance</Text>
+                    <Text variant="helper">Borrowed balance</Text>
                     <Spacer />
-                    <IconButton
-                      variant="ghost"
-                      aria-label="Buy token"
-                      icon={<IoCartSharp />}
-                      size="sm"
-                    />
+
                     <Text display="inline" fontWeight="bold">
-                      {market?.collateralSymbol === "TRX"
-                        ? balance?.available
-                        : balance?.balanceNum}
+                      {borrowedDisplayBalance}
                     </Text>
                     <Text>{market?.collateralSymbol} </Text>
                   </HStack>
@@ -160,6 +232,13 @@ export const BorrowModal = ({
                     />
                   </InputLeftElement>
                   <Input
+                    value={tab === "borrow" ? borrowAmount : repayAmount || ""}
+                    onChange={(e) => {
+                      tab === "borrow"
+                        ? setBorrowAmount(parseFloat(e.target.value))
+                        : setRepayAmount(parseFloat(e.target.value));
+                    }}
+                    min={0}
                     type="number"
                     fontSize="sm"
                     variant="filled"
@@ -178,6 +257,9 @@ export const BorrowModal = ({
                       pr="3"
                       fontSize="sm"
                       textDecor="underline"
+                      onClick={
+                        tab === "borrow" ? handleMaxBorrow : handleMaxRepay
+                      }
                     >
                       Max
                     </Text>
@@ -190,7 +272,12 @@ export const BorrowModal = ({
                 </FormHelperText>
               </FormControl>
 
-              <Button width="100%" my="6">
+              <Button
+                width="100%"
+                my="6"
+                onClick={tab === "borrow" ? handleBorrow : handleRepay}
+                isLoading={isLoading}
+              >
                 {tab === "borrow" ? "Borrow" : "Repay"}{" "}
                 {market?.collateralSymbol}
               </Button>

@@ -7,7 +7,7 @@ import { IMarketDetails } from "@constants/IMarketDetails";
 
 export const fetcher = (url: any) => axios.get(url).then((res) => res.data);
 
-export const useTokensPrice = () => {
+export const useTokensPrice = (tokenSymbol: string | undefined) => {
   const { data, error } = useSWR(config.tokenPriceUrl, fetcher);
 
   const { BTC, ETH, TRX, USDT, WIN } = data?.data || {};
@@ -28,7 +28,16 @@ export const useTokensPrice = () => {
     priceUSDT,
   };
 
+  let tokenPrice = "0";
+
+  if (tokenSymbol === "TRX") {
+    tokenPrice = parseFloat(priceTRX).toFixed(6);
+  } else if (tokenSymbol === "URZ") {
+    tokenPrice = priceBTC;
+  }
+
   return {
+    tokenPrice,
     tokensPrice,
     isLoadingTokensPrice,
     isEmptyTokensPrice,

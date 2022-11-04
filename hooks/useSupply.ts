@@ -53,7 +53,6 @@ export const onSupply = async (
 ) => {
   try {
     const contract = await tronWeb?.contract().at(utokenAddress);
-    console.log(supplyAmount);
 
     if (!isTrx) {
       const supplyAmountBN = BigInt(
