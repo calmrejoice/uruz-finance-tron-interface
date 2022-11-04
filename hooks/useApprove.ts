@@ -42,7 +42,7 @@ export const useApprovalStatus = (
       const approved = approvalAmount >= config.unlimitedApprovalAmount;
       setIsApproved(approved);
     };
-    getApprovalAmount();
+    getApprovalAmount().catch((e) => {});
   }, [tronWeb, tokenAddress, ownerAddress, spenderAddress]);
 
   return isApproved;

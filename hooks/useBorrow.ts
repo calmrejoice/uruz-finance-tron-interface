@@ -45,7 +45,7 @@ export const useBorrowedBalance = (
         formatDisplayBalance(borrowedBalanceRaw, decimals)
       );
     };
-    getBorrowedBalance();
+    getBorrowedBalance().catch((e) => {});
   }, [tronWeb, accountAddress, refreshParams]);
 
   return { borrowedBalance, borrowedDisplayBalance };
@@ -72,7 +72,7 @@ export const useBorrowLimit = (tronWeb: any, accountAddress: string) => {
         formatDisplayBalance(borrowLimitRaw, config.trc20TokenDecimals)
       );
     };
-    getBorrowLimit();
+    getBorrowLimit().catch((e) => {});
   }, [tronWeb, accountAddress]);
 
   return { borrowLimit, borrowDisplayLimit };

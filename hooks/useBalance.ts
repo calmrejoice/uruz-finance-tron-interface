@@ -41,7 +41,7 @@ export const useBalance = (
       }
     };
 
-    getBalance();
+    getBalance().catch((e) => {});
   }, [tronWeb, tokenAddress, accountAddress, refreshParam]);
 
   return { balanceNum, displayBalance };
@@ -73,7 +73,7 @@ export const useUTokenBalance = (
       setDisplayBalance(displayBalance);
     };
 
-    getUTokenBalance();
+    getUTokenBalance().catch((e) => {});
   }, [tronWeb, tokenAddress, accountAddress, refreshParam]);
 
   return { balanceNum, displayBalance };

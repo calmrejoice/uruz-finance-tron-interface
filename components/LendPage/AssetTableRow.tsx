@@ -12,9 +12,11 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 import { IMarket } from "@constants/IMarket";
+import { useMarketStats } from "@context/MarketStatsContext";
 
 import { useMarketDetails } from "@hooks/swrHooks";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { BorrowModal } from "./BorrowModal";
 import { SupplyModal } from "./SupplyModal";
 
@@ -26,6 +28,12 @@ export const AssetTableRow = ({ market }: AssetTableRowProps) => {
   const { marketDetails, isLoadingMarketDetails, mutate } = useMarketDetails(
     market.collateralSymbol
   );
+
+  // To count total supply in main page
+  // const { addSupplyArray } = useMarketStats();
+  // useEffect(() => {
+  //   addSupplyArray(marketDetails?.totalSupplyInUsd);
+  // }, [marketDetails]);
 
   const {
     isOpen: isOpenSupply,

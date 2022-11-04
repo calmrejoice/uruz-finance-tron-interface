@@ -39,7 +39,7 @@ export const useSupplied = (
       setSupplied(suppliedDisplay);
     };
 
-    getSupplied();
+    getSupplied().catch((e) => {});
   }, [tronWeb, utokenAddress, ownerAddress, refreshParam]);
 
   return supplied;

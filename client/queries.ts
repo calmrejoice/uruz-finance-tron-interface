@@ -4,6 +4,36 @@ import { formatBalance, formatDisplayBalance } from "@utils/formatBalance";
 import comptroller from "@deployments/Comptroller.json";
 import axios from "axios";
 
+export const getUTokenLendStats = async (
+  utokenAddress: string,
+  collateralDecimals: number,
+  isTrx: boolean
+) => {
+  const contract = await tronWeb.nile.contract().at(utokenAddress);
+  const totalSupply = await contract.totalSupply().call();
+  const totalBorrow = await contract.totalBorrows().call();
+  const totalReserves = await contract.totalReserves().call();
+
+  // Exchange rate
+  const exchangeRateRaw = await contract.exchangeRateStored().call();
+  const underlyingDecimals = isTrx
+    ? config.trxDecimals
+    : config.trc20TokenDecimals;
+  const rateMantissa = 18 + underlyingDecimals - config.utokenDecimals;
+
+  // @ts-ignore
+  const oneUTokenInUnderlying = exchangeRateRaw / Math.pow(10, rateMantissa);
+  // console.log("1 utoken can be redeemed for", oneUTokenInUnderlying, "token");
+  const oneUnderlyingInUToken = 1 / oneUTokenInUnderlying;
+
+  return {
+    utokenSupply: formatBalance(totalSupply, config.utokenDecimals),
+    utokenBorrowed: formatBalance(totalBorrow, collateralDecimals),
+    utokenReserves: formatBalance(totalReserves, config.utokenDecimals),
+    oneToExchangeRate: oneUnderlyingInUToken.toFixed(6),
+  };
+};
+
 export const getUTokenDetails = async (
   utokenAddress: string,
   collateralDecimals: number,
@@ -45,9 +75,6 @@ export const getUTokenDetails = async (
   // console.log("1 utoken can be redeemed for", oneUTokenInUnderlying, "token");
   const oneUnderlyingInUToken = 1 / oneUTokenInUnderlying;
 
-  // EarnUSDPerday
-  const earnUSDPerDay = 1;
-
   if (contract) {
     return {
       totalBorrow: formatBalance(totalBorrow, collateralDecimals),
@@ -58,7 +85,6 @@ export const getUTokenDetails = async (
       apy: supplyApy.toFixed(2),
       borrowApy: borrowApy.toFixed(2),
       oneToExchangeRate: oneUnderlyingInUToken.toFixed(6),
-      earnUSDPerDay: earnUSDPerDay.toFixed(2),
     };
   }
 };
