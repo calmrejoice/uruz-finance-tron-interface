@@ -5,6 +5,7 @@ import { InterestRateModelCard } from "@components/MarketDetailsPage/InterestRat
 import { MarketInfoCard } from "@components/MarketDetailsPage/MarketInfoCard";
 import { useMarketDetails, useMarkets } from "@hooks/swrHooks";
 import { useRouter } from "next/router";
+import { ethers } from "ethers";
 
 const MarketDetailsPage: NextPage = () => {
   const router = useRouter();
@@ -19,10 +20,14 @@ const MarketDetailsPage: NextPage = () => {
 
   const { marketDetails, isLoadingMarketDetails, mutate } =
     useMarketDetails(tokenSymbol);
+  console.log(marketDetails);
 
   return (
     <Flex mx="32" flexDir="row">
-      <InterestRateModelCard />
+      <InterestRateModelCard
+        model={marketDetails?.model}
+        utilizationRate={marketDetails?.utilizationRate}
+      />
       <MarketInfoCard
         market={market}
         marketDetails={marketDetails}

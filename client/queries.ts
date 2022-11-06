@@ -151,12 +151,18 @@ export const getInterestRateModel = async (
   try {
     const utokenContract = await tronWeb.nile.contract().at(utokenAddress);
     const reserveFactor = await utokenContract.reserveFactorMantissa().call();
+    const cash = await utokenContract.getCash().call();
+    const borrows = await utokenContract.totalBorrows().call();
+    const reserves = await utokenContract.totalReserves().call();
 
     const interestContract = await tronWeb.nile.contract().at(contractAddress);
     const mulPerBlock = await interestContract.multiplierPerBlock().call();
     const basePerBlock = await interestContract.baseRatePerBlock().call();
     const jumpPerBlock = await interestContract.jumpMultiplierPerBlock().call();
     const kink = await interestContract.kink().call();
+    const utilizationRate = await interestContract
+      .utilizationRate(cash, borrows, reserves)
+      .call();
 
     const model = generateInterestModelArray(
       mulPerBlock,
@@ -166,7 +172,7 @@ export const getInterestRateModel = async (
       kink
     );
 
-    return model;
+    return { model, utilizationRate: formatBalance(utilizationRate, 18) };
   } catch (error) {
     console.log(error);
   }

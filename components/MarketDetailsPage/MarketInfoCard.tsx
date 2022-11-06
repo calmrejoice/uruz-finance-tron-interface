@@ -51,8 +51,6 @@ export const MarketInfoCard = ({
     onOpen: onOpenCheckNetwork,
   } = useDisclosure();
 
-  console.log(market?.assetImage);
-
   return (
     <>
       <SupplyModal

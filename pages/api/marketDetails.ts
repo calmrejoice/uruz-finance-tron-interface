@@ -65,7 +65,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       365
     ).toFixed(2);
 
-    const model = await getInterestRateModel(tokenSymbol, utokenAddress);
+    const { model, utilizationRate } =
+      (await getInterestRateModel(tokenSymbol, utokenAddress)) || {};
 
     const result = {
       utokenAddress,
@@ -87,6 +88,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       earnUsdPerDay,
       priceUsd: formatDisplayBalance(priceUsd, 0),
       model,
+      utilizationRate,
       //   borrowPaused: 0,
       //   borrowLimit: "0.000000",
       //   depositHeadcount: 11125,
