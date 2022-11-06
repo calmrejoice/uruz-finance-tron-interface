@@ -5,6 +5,7 @@ export const config = {
   uurzAddress: "TByuWrmpZQb5yYYtWBrT4Kfhzz3jJ1GQ4E",
   urzAddress: "TGaxQR6RmfkL9qhZzh8fF83dDLjnJBfVva",
   utrxAddress: "TGjZXu9amnEfiUy3W8Z1ptxKnTVs6cb9vv",
+  utrxInterestModelAddress: "TCvVDLi9YfuvcMNM8T4WogxDiPkXsEDJVa",
   tokenPriceUrl:
     "https://c.tronlink.org/v1/cryptocurrency/getprice?symbol=TRX,BTC,WIN,USDT,ETH&convert=USD",
 

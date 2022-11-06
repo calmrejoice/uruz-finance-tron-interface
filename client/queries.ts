@@ -3,6 +3,7 @@ import { config } from "@constants/config";
 import { formatBalance, formatDisplayBalance } from "@utils/formatBalance";
 import comptroller from "@deployments/Comptroller.json";
 import axios from "axios";
+import { generateInterestModelArray } from "./generateInterestModelArray";
 
 export const getUTokenLendStats = async (
   utokenAddress: string,
@@ -134,6 +135,38 @@ export const getTokenPrice = async (tokenSymbol: string) => {
       return parseFloat("0.3");
     }
     return 0.01;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getInterestRateModel = async (
+  tokenSymbol: string,
+  utokenAddress: string
+) => {
+  let contractAddress = "";
+  if (tokenSymbol === "TRX") {
+    contractAddress = config.utrxInterestModelAddress;
+  }
+  try {
+    const utokenContract = await tronWeb.nile.contract().at(utokenAddress);
+    const reserveFactor = await utokenContract.reserveFactorMantissa().call();
+
+    const interestContract = await tronWeb.nile.contract().at(contractAddress);
+    const mulPerBlock = await interestContract.multiplierPerBlock().call();
+    const basePerBlock = await interestContract.baseRatePerBlock().call();
+    const jumpPerBlock = await interestContract.jumpMultiplierPerBlock().call();
+    const kink = await interestContract.kink().call();
+
+    const model = generateInterestModelArray(
+      mulPerBlock,
+      basePerBlock,
+      reserveFactor,
+      jumpPerBlock,
+      kink
+    );
+
+    return model;
   } catch (error) {
     console.log(error);
   }

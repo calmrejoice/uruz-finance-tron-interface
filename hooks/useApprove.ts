@@ -29,21 +29,24 @@ export const useApprovalStatus = (
   isTrx: boolean = false
 ) => {
   if (!tronWeb) return;
-  if (isTrx) return true;
 
   const [isApproved, setIsApproved] = useState<boolean>();
   useEffect(() => {
     if (!tronWeb || !tokenAddress || !ownerAddress || !spenderAddress) return;
 
     const getApprovalAmount = async () => {
-      const contract = await tronWeb.contract().at(tokenAddress);
-      const approvalAmount = await contract
-        .allowance(ownerAddress, spenderAddress)
-        .call();
+      if (isTrx) {
+        setIsApproved(true);
+      } else {
+        const contract = await tronWeb.contract().at(tokenAddress);
+        const approvalAmount = await contract
+          .allowance(ownerAddress, spenderAddress)
+          .call();
 
-      const approved = approvalAmount >= config.unlimitedApprovalAmount;
+        const approved = approvalAmount >= config.unlimitedApprovalAmount;
 
-      setIsApproved(approved);
+        setIsApproved(approved);
+      }
     };
     getApprovalAmount().catch((e) => {});
   }, [tronWeb, tokenAddress, ownerAddress, spenderAddress]);

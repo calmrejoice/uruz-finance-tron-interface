@@ -59,20 +59,17 @@ export const SupplyModal = ({
   const { colorMode } = useColorMode();
   const isTrx = market?.collateralSymbol === "TRX";
   const tokenAddress = isTrx ? undefined : market?.collateralAddress;
-  const balance: any = useBalance(
-    tron,
-    address,
-    tokenAddress,
-    isTrx,
-    marketDetails?.totalCash
-  );
+  const balance: any =
+    useBalance(tron, address, tokenAddress, isTrx, marketDetails?.totalCash) ||
+    0;
 
-  const utokenBalance: any = useUTokenBalance(
-    tron,
-    address,
-    market?.utokenAddress,
-    marketDetails?.totalCash
-  );
+  const utokenBalance: any =
+    useUTokenBalance(
+      tron,
+      address,
+      market?.utokenAddress,
+      marketDetails?.totalCash
+    ) || 0;
 
   const supplied =
     useSupplied(
@@ -159,7 +156,7 @@ export const SupplyModal = ({
     let tokenBal = 0;
 
     if (tab === "supply") {
-      tokenBal = balance.displayBalance;
+      tokenBal = balance?.displayBalance;
     } else {
       // Withdraw tab
       tokenBal = utokenBalance?.displayBalance;

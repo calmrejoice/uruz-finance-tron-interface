@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { config } from "@constants/config";
 import {
   getComptrollerDetails,
+  getInterestRateModel,
   getTokenPrice,
   getUTokenDetails,
 } from "client/queries";
@@ -64,6 +65,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       365
     ).toFixed(2);
 
+    const model = await getInterestRateModel(tokenSymbol, utokenAddress);
+
     const result = {
       utokenAddress,
       collateralSymbol,
@@ -83,9 +86,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       totalBorrowedInUsd,
       earnUsdPerDay,
       priceUsd: formatDisplayBalance(priceUsd, 0),
+      model,
       //   borrowPaused: 0,
       //   borrowLimit: "0.000000",
-      //   model: [],
       //   depositHeadcount: 11125,
       //   borrowHeadcount: 527,
     };
