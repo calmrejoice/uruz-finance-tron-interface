@@ -9,10 +9,16 @@ import {
 } from "@chakra-ui/react";
 import { Card } from "@components/Shared/Card";
 import { InfoTooltip } from "@components/Shared/InfoTooltip";
+import { useAuth } from "@context/AuthContext";
+import { usePortfolio } from "@hooks/swrHooks";
 import { AccountStat } from "./AccountStat";
 import { BorrowLimit } from "./BorrowLimit";
 
 export const MyAccountCard = () => {
+  const { address } = useAuth();
+  const { portfolio } = usePortfolio(address);
+  console.log(portfolio);
+
   return (
     <Card flexDir="column" width="3xl" minHeight="md">
       <Flex flexDir="row" justifyContent="space-between">
@@ -35,21 +41,33 @@ export const MyAccountCard = () => {
           <InfoTooltip label="Percentage of your total supply balance received as yearly interests" />
         </Flex>
         <Text fontSize="4xl" fontWeight="bold">
-          0%
+          {portfolio?.netApy?.toFixed(2)}%
         </Text>
       </Flex>
       <Spacer />
 
       <HStack spacing="9">
-        <AccountStat title="Daily earnings" value="$0.00" />
+        <AccountStat
+          title="Daily earnings"
+          value={`$${portfolio?.totalDailyEarnings?.toFixed(2)}`}
+        />
         <Divider orientation="vertical" height="3rem" />
-        <AccountStat title="Supply balance" value="$0.00" />
+        <AccountStat
+          title="Supply balance"
+          value={`$${portfolio?.totalSupplyBalance?.toFixed(2)}`}
+        />
         <Divider orientation="vertical" height="3rem" />
-        <AccountStat title="Borrow balance" value="$0.00" />
+        <AccountStat
+          title="Borrow balance"
+          value={`$${portfolio?.totalBorrowBalance?.toFixed(2)}`}
+        />
       </HStack>
       <Spacer />
 
-      <BorrowLimit />
+      <BorrowLimit
+        borrowLimit={portfolio?.totalBorrowLimit}
+        totalBorrowBalance={portfolio?.totalBorrowBalance}
+      />
     </Card>
   );
 };

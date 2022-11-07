@@ -1,6 +1,10 @@
 import { tronWeb } from "@utils/tronWeb";
 import { config } from "@constants/config";
-import { formatBalance, formatDisplayBalance } from "@utils/formatBalance";
+import {
+  convertToUnderlyingBalance,
+  formatBalance,
+  formatDisplayBalance,
+} from "@utils/formatBalance";
 import comptroller from "@deployments/Comptroller.json";
 import axios from "axios";
 import { generateInterestModelArray } from "./generateInterestModelArray";
@@ -35,20 +39,7 @@ export const getUTokenLendStats = async (
   };
 };
 
-export const getUTokenDetails = async (
-  utokenAddress: string,
-  collateralDecimals: number,
-  isTrx: boolean
-) => {
-  if (!utokenAddress) return;
-  const contract = await tronWeb.nile.contract().at(utokenAddress);
-  const totalBorrow = await contract.totalBorrows().call();
-
-  const totalSupply = await contract.totalSupply().call();
-  const totalReserves = await contract.totalReserves().call();
-  const reserveFactor = await contract.reserveFactorMantissa().call();
-  const totalCash = await contract.getCash().call();
-
+export const getUTokenApy = async (contract: any) => {
   // Supply and Borrow APY
   const mantissa = 10 ** config.trc20TokenDecimals;
   const blocksPerDay = 20 * 60 * 24;
@@ -63,6 +54,25 @@ export const getUTokenDetails = async (
     (Math.pow((borrowRatePerBlock / mantissa) * blocksPerDay + 1, daysPerYear) -
       1) *
     100;
+
+  return { supplyApy, borrowApy };
+};
+
+export const getUTokenDetails = async (
+  utokenAddress: string,
+  collateralDecimals: number,
+  isTrx: boolean
+) => {
+  if (!utokenAddress) return;
+  const contract = await tronWeb.nile.contract().at(utokenAddress);
+  const totalBorrow = await contract.totalBorrows().call();
+
+  const totalSupply = await contract.totalSupply().call();
+  const totalReserves = await contract.totalReserves().call();
+  const reserveFactor = await contract.reserveFactorMantissa().call();
+  const totalCash = await contract.getCash().call();
+
+  const { supplyApy, borrowApy } = await getUTokenApy(contract);
 
   // Exchange rate
   const exchangeRateRaw = await contract.exchangeRateStored().call();
@@ -176,4 +186,43 @@ export const getInterestRateModel = async (
   } catch (error) {
     console.log(error);
   }
+};
+
+export const getAccountSnapshot = async (
+  utokenAddress: string,
+  accountAddress: string,
+  tokenSymbol: string,
+  collateralFactor: number
+) => {
+  const contract = await tronWeb.nile.contract().at(utokenAddress);
+  const data = await contract.getAccountSnapshot(accountAddress).call();
+  const utokenBalance = data[1];
+  const borrowBalance = data[2];
+  const exchangeRateMantissa = data[3];
+  const { supplyApy } = await getUTokenApy(contract);
+
+  const tokenPrice = (await getTokenPrice(tokenSymbol)) || 1;
+  const decimals =
+    tokenSymbol === "TRX" ? config.trxDecimals : config.trc20TokenDecimals;
+  const underlyingUTokenBalance = convertToUnderlyingBalance(
+    exchangeRateMantissa,
+    decimals,
+    utokenBalance
+  );
+
+  const utokenBalanceInUsd = tokenPrice * underlyingUTokenBalance;
+
+  const borrowLimit = utokenBalanceInUsd * collateralFactor;
+
+  const borrowBalanceInUsd =
+    formatBalance(borrowBalance, decimals) * tokenPrice;
+
+  return {
+    utokenBalance,
+    borrowBalance,
+    borrowLimit,
+    utokenBalanceInUsd,
+    borrowBalanceInUsd,
+    apy: supplyApy,
+  };
 };

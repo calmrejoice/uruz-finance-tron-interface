@@ -37,7 +37,12 @@ export const InterestRateModelCard = ({
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <Box bgColor="white" p="6" borderRadius="lg" shadow="lg">
+        <Box
+          bgColor={colorMode === "dark" ? "gray.800" : "white"}
+          p="6"
+          borderRadius="lg"
+          shadow="lg"
+        >
           <Text variant="helper">
             Utilization: <Badge colorScheme="yellow">{label}%</Badge>
           </Text>

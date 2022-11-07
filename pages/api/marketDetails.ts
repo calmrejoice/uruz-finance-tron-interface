@@ -61,7 +61,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const totalBorrowedInUsd = (totalBorrow * priceUsd).toFixed(2);
 
     const earnUsdPerDay = (
-      (totalBorrow * (parseFloat(borrowApy) / 100)) /
+      (parseFloat(totalBorrowedInUsd) * (parseFloat(borrowApy) / 100)) /
       365
     ).toFixed(2);
 

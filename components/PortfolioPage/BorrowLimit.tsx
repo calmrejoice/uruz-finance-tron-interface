@@ -1,7 +1,12 @@
 import { Flex, Progress, Spacer, Text } from "@chakra-ui/react";
 import { InfoTooltip } from "@components/Shared/InfoTooltip";
 
-export const BorrowLimit = () => {
+export const BorrowLimit = ({ borrowLimit, totalBorrowBalance }: any) => {
+  const borrowLimitUsed = (totalBorrowBalance / borrowLimit) * 100;
+
+  console.log(borrowLimitUsed);
+  const safeLimit = (borrowLimit * 0.8).toFixed(2);
+
   return (
     <Flex flexDir="column">
       <Flex flexDir="row" alignItems="center">
@@ -9,16 +14,16 @@ export const BorrowLimit = () => {
           Borrow limit used:
         </Text>
         <Text fontSize="sm" fontWeight="bold">
-          $0.00
+          {borrowLimitUsed?.toFixed(2)}%
         </Text>
-        <InfoTooltip label="Including minted stablecoin" />
+        <InfoTooltip label="Percentage of total borrow limit used." />
 
         <Spacer />
         <Text variant="helper" mr="1">
           Limit:
         </Text>
         <Text fontSize="sm" fontWeight="bold">
-          $0.00
+          ${borrowLimit?.toFixed(2)}
         </Text>
       </Flex>
 
@@ -26,7 +31,7 @@ export const BorrowLimit = () => {
         colorScheme="yellow"
         borderRadius="full"
         size="xs"
-        value={20}
+        value={borrowLimitUsed}
         my="3"
         bgColor="gray.400"
       />
@@ -37,7 +42,7 @@ export const BorrowLimit = () => {
           Your safe limit:
         </Text>
         <Text fontSize="sm" fontWeight="bold">
-          $0.00
+          ${safeLimit}
         </Text>
 
         <InfoTooltip label="80% of your borrow limit. We consider borrowing above this threshold unsafe." />
