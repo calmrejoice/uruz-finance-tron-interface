@@ -34,7 +34,7 @@ export const getUTokenLendStats = async (
   return {
     utokenSupply: formatBalance(totalSupply, config.utokenDecimals),
     utokenBorrowed: formatBalance(totalBorrow, collateralDecimals),
-    utokenReserves: formatBalance(totalReserves, config.utokenDecimals),
+    utokenReserves: formatBalance(totalReserves, collateralDecimals),
     oneToExchangeRate: oneUnderlyingInUToken.toFixed(6),
   };
 };
@@ -90,7 +90,7 @@ export const getUTokenDetails = async (
     return {
       totalBorrow: formatBalance(totalBorrow, collateralDecimals),
       totalSupply: formatBalance(totalSupply, config.utokenDecimals),
-      totalReserves: formatBalance(totalReserves, config.utokenDecimals),
+      totalReserves: formatBalance(totalReserves, collateralDecimals),
       reserveFactor: formatBalance(reserveFactor, 18),
       totalCash: formatDisplayBalance(totalCash, collateralDecimals),
       apy: supplyApy.toFixed(2),

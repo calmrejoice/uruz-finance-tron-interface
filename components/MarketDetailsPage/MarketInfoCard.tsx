@@ -102,7 +102,7 @@ export const MarketInfoCard = ({
         <MarketInfoItem title="Borrowers" details={pool?.borrowerCount} /> */}
           <MarketInfoItem
             title="Available lending"
-            details={`${marketDetails?.totalCash} TRX`}
+            details={`${marketDetails?.totalCash} ${market?.collateralSymbol}`}
             isLoading={isLoadingMarketDetails}
           />
           <MarketInfoItem
@@ -112,7 +112,9 @@ export const MarketInfoCard = ({
           />
           <MarketInfoItem
             title="Reserve amount"
-            details={`${marketDetails?.totalReserves} ${tokenSymbol}`}
+            details={`${marketDetails?.totalReserves?.toFixed(
+              6
+            )} ${tokenSymbol}`}
             isLoading={isLoadingMarketDetails}
           />
           <MarketInfoItem
