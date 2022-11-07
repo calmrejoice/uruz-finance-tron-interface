@@ -228,7 +228,7 @@ export const BorrowModal = ({
 
         <ModalBody>
           <HStack fontWeight="bold">
-            <Text variant="helper">Total borrowed</Text>
+            <Text variant="helper">Total borrowed in all markets</Text>
             <Spacer />
             <Text>${portfolio?.totalBorrowBalance?.toFixed(2)}</Text>
           </HStack>

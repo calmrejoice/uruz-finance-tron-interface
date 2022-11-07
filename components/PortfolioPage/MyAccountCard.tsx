@@ -19,6 +19,8 @@ export const MyAccountCard = () => {
   const { address } = useAuth();
   const { portfolio, isLoadingPortfolio } = usePortfolio(address);
 
+  const netApyPercent = portfolio?.netApy * 100;
+
   return (
     <Card flexDir="column" width="3xl" minHeight="md">
       <Flex flexDir="row" justifyContent="space-between">
@@ -44,7 +46,7 @@ export const MyAccountCard = () => {
           <Skeleton>placeholder</Skeleton>
         ) : (
           <Text fontSize="4xl" fontWeight="bold">
-            {portfolio?.netApy?.toFixed(2)}%
+            {netApyPercent?.toFixed(2)}%
           </Text>
         )}
       </Flex>
