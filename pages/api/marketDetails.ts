@@ -66,7 +66,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     ).toFixed(2);
 
     const { model, utilizationRate } =
-      (await getInterestRateModel(tokenSymbol, utokenAddress)) || {};
+      (await getInterestRateModel(utokenAddress)) || {};
 
     const result = {
       utokenAddress,

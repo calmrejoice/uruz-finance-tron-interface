@@ -35,7 +35,7 @@ import { IMarketDetails } from "@constants/IMarketDetails";
 import { IMarket } from "@constants/IMarket";
 import { useBalance } from "@hooks/useBalance";
 import { useAuth } from "@context/AuthContext";
-import { onBorrow, useBorrowedBalance, useBorrowLimit } from "@hooks/useBorrow";
+import { onBorrow, useBorrowedBalance } from "@hooks/useBorrow";
 import { ToastLinkButton } from "@components/Shared/ToastLinkButton";
 import { onRepay } from "@hooks/useRepay";
 import { onApprove, useApprovalStatus } from "@hooks/useApprove";
@@ -69,8 +69,6 @@ export const BorrowModal = ({
     isTrx,
     marketDetails?.totalCash
   );
-
-  const { borrowDisplayLimit, borrowLimit } = useBorrowLimit(tron, address);
 
   const { borrowedDisplayBalance, borrowedBalance } = useBorrowedBalance(
     tron,

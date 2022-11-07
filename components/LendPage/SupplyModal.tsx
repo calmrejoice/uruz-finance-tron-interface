@@ -176,7 +176,6 @@ export const SupplyModal = ({
     market?.utokenAddress,
     isTrx
   );
-  console.log(isApproved);
 
   const handleApprove = async () => {
     setIsLoading(true);

@@ -50,30 +50,3 @@ export const useBorrowedBalance = (
 
   return { borrowedBalance, borrowedDisplayBalance };
 };
-
-export const useBorrowLimit = (tronWeb: any, accountAddress: string) => {
-  const [borrowLimit, setBorrowLimit] = useState(0);
-  const [borrowDisplayLimit, setBorrowDisplayLimit] = useState("0");
-
-  useEffect(() => {
-    if (!tronWeb || !accountAddress) return;
-    const getBorrowLimit = async () => {
-      const contract = await tronWeb?.contract(
-        comptroller.abi,
-        config.unitrollerAddress
-      );
-      const data = await contract.getAccountLiquidity(accountAddress).call();
-
-      const borrowLimitRaw = data[1];
-      console.log(borrowLimitRaw.toString(), "borrow limit");
-
-      setBorrowLimit(formatBalance(borrowLimitRaw, config.trc20TokenDecimals));
-      setBorrowDisplayLimit(
-        formatDisplayBalance(borrowLimitRaw, config.trc20TokenDecimals)
-      );
-    };
-    getBorrowLimit().catch((e) => {});
-  }, [tronWeb, accountAddress]);
-
-  return { borrowLimit, borrowDisplayLimit };
-};
