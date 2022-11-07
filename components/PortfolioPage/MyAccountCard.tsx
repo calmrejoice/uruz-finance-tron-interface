@@ -3,6 +3,7 @@ import {
   Flex,
   Heading,
   HStack,
+  Skeleton,
   Spacer,
   Switch,
   Text,
@@ -16,8 +17,7 @@ import { BorrowLimit } from "./BorrowLimit";
 
 export const MyAccountCard = () => {
   const { address } = useAuth();
-  const { portfolio } = usePortfolio(address);
-  console.log(portfolio);
+  const { portfolio, isLoadingPortfolio } = usePortfolio(address);
 
   return (
     <Card flexDir="column" width="3xl" minHeight="md">
@@ -40,9 +40,13 @@ export const MyAccountCard = () => {
           <Text variant="helper">Net APY</Text>
           <InfoTooltip label="Percentage of your total supply balance received as yearly interests" />
         </Flex>
-        <Text fontSize="4xl" fontWeight="bold">
-          {portfolio?.netApy?.toFixed(2)}%
-        </Text>
+        {isLoadingPortfolio ? (
+          <Skeleton>placeholder</Skeleton>
+        ) : (
+          <Text fontSize="4xl" fontWeight="bold">
+            {portfolio?.netApy?.toFixed(2)}%
+          </Text>
+        )}
       </Flex>
       <Spacer />
 
@@ -50,16 +54,19 @@ export const MyAccountCard = () => {
         <AccountStat
           title="Daily earnings"
           value={`$${portfolio?.totalDailyEarnings?.toFixed(2)}`}
+          isLoading={isLoadingPortfolio}
         />
         <Divider orientation="vertical" height="3rem" />
         <AccountStat
           title="Supply balance"
           value={`$${portfolio?.totalSupplyBalance?.toFixed(2)}`}
+          isLoading={isLoadingPortfolio}
         />
         <Divider orientation="vertical" height="3rem" />
         <AccountStat
           title="Borrow balance"
           value={`$${portfolio?.totalBorrowBalance?.toFixed(2)}`}
+          isLoading={isLoadingPortfolio}
         />
       </HStack>
       <Spacer />
@@ -67,6 +74,7 @@ export const MyAccountCard = () => {
       <BorrowLimit
         borrowLimit={portfolio?.totalBorrowLimit}
         totalBorrowBalance={portfolio?.totalBorrowBalance}
+        isLoading={isLoadingPortfolio}
       />
     </Card>
   );

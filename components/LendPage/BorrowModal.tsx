@@ -39,6 +39,7 @@ import { onBorrow, useBorrowedBalance, useBorrowLimit } from "@hooks/useBorrow";
 import { ToastLinkButton } from "@components/Shared/ToastLinkButton";
 import { onRepay } from "@hooks/useRepay";
 import { onApprove, useApprovalStatus } from "@hooks/useApprove";
+import { usePortfolio } from "@hooks/swrHooks";
 
 type BorrowModalProps = {
   isOpen: any;
@@ -151,7 +152,8 @@ export const BorrowModal = ({
     tron,
     market?.utokenAddress,
     address,
-    market?.utokenAddress
+    market?.utokenAddress,
+    isTrx
   );
 
   const handleApprove = async () => {
@@ -207,6 +209,10 @@ export const BorrowModal = ({
     }
   };
 
+  const { portfolio } = usePortfolio(address);
+  const borrowLimitUsed =
+    (portfolio?.totalBorrowBalance / portfolio?.totalBorrowLimit) * 100;
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -226,27 +232,27 @@ export const BorrowModal = ({
           <HStack fontWeight="bold">
             <Text variant="helper">Total borrowed</Text>
             <Spacer />
-            <Text>$0</Text>
+            <Text>${portfolio?.totalBorrowBalance?.toFixed(2)}</Text>
           </HStack>
 
           <HStack fontWeight="bold">
             <Text variant="helper">Borrow limit used</Text>
             <Spacer />
-            <Text>0%</Text>
+            <Text>{borrowLimitUsed?.toFixed(2)}%</Text>
           </HStack>
 
           <HStack>
             <Text variant="helper">Borrow APY</Text>
             <Spacer />
 
-            <Badge colorScheme="red">{marketDetails?.borrowApy}</Badge>
+            <Badge colorScheme="red">{marketDetails?.borrowApy}%</Badge>
           </HStack>
 
           <HStack fontWeight="bold">
             <Text variant="helper">Total lending available</Text>
             <Spacer />
 
-            <Text>363.60M</Text>
+            <Text>{marketDetails?.totalCash}</Text>
             <Text>{market?.collateralSymbol}</Text>
           </HStack>
 

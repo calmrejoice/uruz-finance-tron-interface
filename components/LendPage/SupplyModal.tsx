@@ -176,6 +176,7 @@ export const SupplyModal = ({
     market?.utokenAddress,
     isTrx
   );
+  console.log(isApproved);
 
   const handleApprove = async () => {
     setIsLoading(true);
@@ -258,14 +259,14 @@ export const SupplyModal = ({
             <Text variant="helper">Supply APY</Text>
             <Spacer />
 
-            <Badge colorScheme="green">{marketDetails?.apy}</Badge>
+            <Badge colorScheme="green">{marketDetails?.apy}%</Badge>
           </HStack>
 
           <HStack fontWeight="bold">
             <Text variant="helper">Total withdrawal available</Text>
             <Spacer />
 
-            <Text>363.60M</Text>
+            <Text>{marketDetails?.totalCash}</Text>
             <Text>{market?.collateralSymbol}</Text>
           </HStack>
 
