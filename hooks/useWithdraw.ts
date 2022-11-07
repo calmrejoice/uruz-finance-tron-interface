@@ -9,15 +9,30 @@ export const onWithdraw = async (
   try {
     const contract = await tronWeb?.contract().at(utokenAddress);
 
-    console.log(withdrawAmount);
-
-    // const decimals = isTrx ? config.trxDecimals : config.utokenDecimals;
     const withdrawAmountBN = BigInt(
       withdrawAmount * 10 ** config.utokenDecimals
     );
 
-    console.log(withdrawAmountBN);
     const result = await contract.redeem(withdrawAmountBN).send();
+    return result;
+  } catch (error) {
+    console.log(error);
+    return { success: false, error };
+  }
+};
+
+export const onWithdrawGovToken = async (
+  tronWeb: any,
+  withdrawAmount: number
+) => {
+  try {
+    const contract = await tronWeb?.contract().at(config.wurzAddress);
+
+    const withdrawAmountBN: any = BigInt(
+      withdrawAmount * 10 ** config.trc20TokenDecimals
+    );
+
+    const result = await contract.withdraw(withdrawAmountBN).send();
     return result;
   } catch (error) {
     console.log(error);

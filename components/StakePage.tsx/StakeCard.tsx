@@ -5,16 +5,22 @@ import {
   Heading,
   HStack,
   Image,
+  Skeleton,
   Spacer,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import { AccountStat } from "@components/PortfolioPage/AccountStat";
 import { Card } from "@components/Shared/Card";
+import { useAuth } from "@context/AuthContext";
+import { useStakeDetails } from "@hooks/swrHooks";
 import { StakeModal } from "./StakeModal";
 import { WithdrawModal } from "./WithdrawModal";
 
 export const StakeCard = () => {
+  const { address } = useAuth();
+  const { stakeDetails, isLoadingStakeDetails } = useStakeDetails(address);
+
   const {
     isOpen: isOpenWithdraw,
     onOpen: onOpenWithdraw,
@@ -29,8 +35,16 @@ export const StakeCard = () => {
 
   return (
     <Card flexDir="column" width="3xl" minHeight="md">
-      <WithdrawModal isOpen={isOpenWithdraw} onClose={onCloseWithdraw} />
-      <StakeModal isOpen={isOpenStake} onClose={onCloseStake} />
+      <WithdrawModal
+        isOpen={isOpenWithdraw}
+        onClose={onCloseWithdraw}
+        refreshParams={stakeDetails}
+      />
+      <StakeModal
+        isOpen={isOpenStake}
+        onClose={onCloseStake}
+        refreshParams={stakeDetails}
+      />
       <Flex flexDir="row" alignItems="center">
         <Image
           src="/tokens/urz.png"
@@ -50,19 +64,27 @@ export const StakeCard = () => {
           <Text variant="helper">You are staking</Text>
         </Flex>
         <HStack alignItems="center">
-          <Text fontSize="4xl" fontWeight="bold">
-            0 URZ
-          </Text>
+          {isLoadingStakeDetails ? (
+            <Skeleton>placeholder</Skeleton>
+          ) : (
+            <Text fontSize="4xl" fontWeight="bold">
+              {stakeDetails?.accountStaked} URZ
+            </Text>
+          )}
         </HStack>
       </Flex>
       <Spacer />
 
       <HStack spacing="9">
-        <AccountStat title="URZ Staking APR" value="21.18%" />
+        <AccountStat title="URZ Staking APR" value={"coming soon"} />
         <Divider orientation="vertical" height="3rem" />
-        <AccountStat title="Daily Emission" value="3,000 URZ" />
+        <AccountStat title="Daily Emission" value={"coming soon"} />
         <Divider orientation="vertical" height="3rem" />
-        <AccountStat title="Total Staked" value="5.17M URZ" />
+        <AccountStat
+          title="Total Staked"
+          value={`${stakeDetails?.totalStaked} URZ`}
+          isLoading={isLoadingStakeDetails}
+        />
       </HStack>
       <Spacer />
 

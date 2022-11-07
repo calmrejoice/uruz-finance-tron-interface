@@ -17,9 +17,108 @@ import {
   InputRightElement,
   InputLeftElement,
   Spacer,
+  useToast,
 } from "@chakra-ui/react";
+import { ToastLinkButton } from "@components/Shared/ToastLinkButton";
+import { config } from "@constants/config";
+import { useAuth } from "@context/AuthContext";
+import { onApprove, useApprovalStatus } from "@hooks/useApprove";
+import { useBalance, useUTokenBalance } from "@hooks/useBalance";
+import { onStake } from "@hooks/useStake";
+import { useState } from "react";
 
-export const StakeModal = ({ isOpen, onClose }: any) => {
+export const StakeModal = ({ isOpen, onClose, refreshParams }: any) => {
+  const { tron, address } = useAuth();
+
+  const { balanceNum, displayBalance } = useBalance(
+    tron,
+    address,
+    config.urzAddress,
+    false,
+    refreshParams
+  );
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [stakeAmount, setStakeAmount] = useState<any>(0);
+  const toast = useToast();
+
+  const handleStake = async () => {
+    if (!stakeAmount) return;
+    setIsLoading(true);
+    const res = await onStake(tron, stakeAmount);
+
+    if (res.success === false) {
+      toast({
+        title: "Transaction failed.",
+        description: `Error: ${res.error}`,
+        status: "error",
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Transaction successful",
+        description: ToastLinkButton(res),
+        status: "success",
+        isClosable: true,
+      });
+    }
+    setIsLoading(false);
+    onClose();
+  };
+
+  const isApproved = useApprovalStatus(
+    tron,
+    config.urzAddress,
+    address,
+    config.wurzAddress
+  );
+
+  const handleApprove = async () => {
+    setIsLoading(true);
+    // @ts-ignore
+    const res: any = await onApprove(
+      tron,
+      config.urzAddress,
+      config.wurzAddress
+    );
+    if (res.success === false) {
+      toast({
+        title: "Transaction failed.",
+        description: `Error: ${res.error}`,
+        status: "error",
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Transaction successful",
+        description: ToastLinkButton(res),
+        status: "success",
+        isClosable: true,
+      });
+    }
+    setIsLoading(false);
+  };
+
+  const handleMax = () => {
+    setStakeAmount(balanceNum);
+  };
+
+  const renderButton = () => {
+    if (isApproved) {
+      return (
+        <Button onClick={handleStake} isLoading={isLoading}>
+          Stake
+        </Button>
+      );
+    } else {
+      return (
+        <Button onClick={handleApprove} isLoading={isLoading}>
+          Approve URZ
+        </Button>
+      );
+    }
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
@@ -37,9 +136,25 @@ export const StakeModal = ({ isOpen, onClose }: any) => {
               <InputLeftElement>
                 <Image src="/tokens/urz.png" boxSize="20px" alt="urz logo" />
               </InputLeftElement>
-              <Input placeholder="0.00" type="number" variant="filled" />
+              <Input
+                min={0}
+                placeholder="0.00"
+                type="number"
+                variant="filled"
+                value={stakeAmount}
+                onChange={(e) => setStakeAmount(parseFloat(e.target.value))}
+                onClick={() => {
+                  stakeAmount === 0 ? setStakeAmount("") : null;
+                }}
+              />
               <InputRightElement>
-                <Text as="button" pr="3" fontSize="sm" textDecor="underline">
+                <Text
+                  as="button"
+                  pr="3"
+                  fontSize="sm"
+                  textDecor="underline"
+                  onClick={handleMax}
+                >
                   Max
                 </Text>
               </InputRightElement>
@@ -48,9 +163,9 @@ export const StakeModal = ({ isOpen, onClose }: any) => {
               <Image src="/tokens/urz.png" boxSize="20px" alt="urz logo" />
               <Text variant="helper">Available URZ</Text>
               <Spacer />
-              <Text fontWeight="bold">0 URZ</Text>
+              <Text fontWeight="bold">{displayBalance} URZ</Text>
             </HStack>
-            <Button>Stake</Button>
+            {renderButton()}
           </Flex>
         </ModalBody>
       </ModalContent>

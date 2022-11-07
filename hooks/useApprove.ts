@@ -1,5 +1,6 @@
 import { config } from "@constants/config";
 import { tronOptions } from "@utils/tronWeb";
+import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 
 export const onApprove = async (
@@ -26,7 +27,7 @@ export const useApprovalStatus = (
   tokenAddress: string,
   ownerAddress: string,
   spenderAddress: string | undefined,
-  isTrx: boolean
+  isTrx?: boolean
 ) => {
   if (!tronWeb) return;
 
@@ -39,11 +40,11 @@ export const useApprovalStatus = (
 
     const getApprovalAmount = async () => {
       const contract = await tronWeb.contract().at(tokenAddress);
-      const approvalAmount = await contract
+      const approvalAmountBN = await contract
         .allowance(ownerAddress, spenderAddress)
         .call();
 
-      const approved = approvalAmount >= config.unlimitedApprovalAmount;
+      const approved = approvalAmountBN >= 100000e18;
 
       setIsApproved(approved);
     };

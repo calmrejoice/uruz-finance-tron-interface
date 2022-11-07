@@ -29,7 +29,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import { IoCartSharp } from "react-icons/io5";
 import { TabHeading } from "./TabHeading";
 import { IMarketDetails } from "@constants/IMarketDetails";
 import { IMarket } from "@constants/IMarket";
@@ -62,14 +61,6 @@ export const BorrowModal = ({
   const isTrx = market?.collateralSymbol === "TRX";
   const tokenAddress = isTrx ? undefined : market?.collateralAddress;
 
-  const balance: any = useBalance(
-    tron,
-    address,
-    tokenAddress,
-    isTrx,
-    marketDetails?.totalCash
-  );
-
   const { borrowedDisplayBalance, borrowedBalance } = useBorrowedBalance(
     tron,
     address,
@@ -79,7 +70,7 @@ export const BorrowModal = ({
   );
 
   const [isLoading, setIsLoading] = useState(false);
-  const [borrowAmount, setBorrowAmount] = useState<number>();
+  const [borrowAmount, setBorrowAmount] = useState<any>();
   const toast = useToast();
   const handleBorrow = async () => {
     if (!borrowAmount) return;
@@ -111,7 +102,7 @@ export const BorrowModal = ({
     onClose();
   };
 
-  const [repayAmount, setRepayAmount] = useState<number>();
+  const [repayAmount, setRepayAmount] = useState<any>();
   const handleRepay = async () => {
     if (!repayAmount) return;
     setIsLoading(true);

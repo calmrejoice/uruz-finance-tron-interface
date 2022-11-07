@@ -4,6 +4,7 @@ export const config = {
   unitrollerAddress: "TPBngLaAUtFe9DzqKJri7ziMrS2SRK25XB",
   uurzAddress: "TByuWrmpZQb5yYYtWBrT4Kfhzz3jJ1GQ4E",
   urzAddress: "TGaxQR6RmfkL9qhZzh8fF83dDLjnJBfVva",
+  wurzAddress: "TFSj9KmFnVg9dUn6NyBeX2EuSFKeKvHyPT",
   utrxAddress: "TGjZXu9amnEfiUy3W8Z1ptxKnTVs6cb9vv",
   utrxInterestModelAddress: "TCvVDLi9YfuvcMNM8T4WogxDiPkXsEDJVa",
   tokenPriceUrl:

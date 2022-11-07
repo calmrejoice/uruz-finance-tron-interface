@@ -6,6 +6,7 @@ import { IMarket } from "@constants/IMarket";
 import { IMarketDetails } from "@constants/IMarketDetails";
 import { ILendStats } from "@constants/ILendStats";
 import { IPortfolio } from "@constants/IPortfolio";
+import { IStakeDetails } from "@constants/IStakeDetails";
 
 export const fetcher = (url: any) => axios.get(url).then((res) => res.data);
 
@@ -106,5 +107,24 @@ export const usePortfolio = (accountAddress: string) => {
     portfolio,
     isLoadingPortfolio,
     isEmptyPortfolio,
+  };
+};
+
+export const useStakeDetails = (accountAddress: string) => {
+  const { data, error } = useSWR(
+    accountAddress
+      ? `/api/stakeDetails?accountAddress=${accountAddress}`
+      : null,
+    fetcher
+  );
+
+  const stakeDetails: IStakeDetails = data;
+  const isLoadingStakeDetails = !data && !error;
+  const isEmptyStakeDetails = data?.length === 0;
+
+  return {
+    stakeDetails,
+    isLoadingStakeDetails,
+    isEmptyStakeDetails,
   };
 };
