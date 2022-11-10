@@ -7,6 +7,7 @@ import { IMarketDetails } from "@constants/IMarketDetails";
 import { ILendStats } from "@constants/ILendStats";
 import { IPortfolio } from "@constants/IPortfolio";
 import { IStakeDetails } from "@constants/IStakeDetails";
+import { IProposalDetails } from "@constants/IProposalDetails";
 
 export const fetcher = (url: any) => axios.get(url).then((res) => res.data);
 
@@ -128,3 +129,34 @@ export const useStakeDetails = (accountAddress: string) => {
     isEmptyStakeDetails,
   };
 };
+
+export const useProposals = () => {
+  const { data, error } = useSWR(`/api/proposals`, fetcher);
+
+  const proposals: IProposalDetails[] = data;
+  const isLoadingProposals = !data && !error;
+  const isEmptyProposals = data?.length === 0;
+
+  return {
+    proposals,
+    isLoadingProposals,
+    isEmptyProposals,
+  };
+};
+
+// export const useProposalDetails = (proposalId: string) => {
+//   const { data, error } = useSWR(
+//     proposalId ? `/api/proposalDetails?proposalId=${proposalId}` : null,
+//     fetcher
+//   );
+
+//   const proposalDetails: IProposalDetails = data;
+//   const isLoadingProposalDetails = !data && !error;
+//   const isEmptyProposalDetails = data?.length === 0;
+
+//   return {
+//     proposalDetails,
+//     isLoadingProposalDetails,
+//     isEmptyProposalDetails,
+//   };
+// };

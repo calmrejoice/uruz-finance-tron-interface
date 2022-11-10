@@ -19,10 +19,8 @@ export const useBalance = (
       if (isTrx) {
         const account = await tronWeb?.trx.getAccount(accountAddress);
         const availableNum = formatBalance(account.balance, config.trxDecimals);
-        const availableDisplay = formatDisplayBalance(
-          account.balance,
-          config.trxDecimals
-        );
+        const availableDisplay =
+          formatDisplayBalance(account.balance, config.trxDecimals) || "0";
 
         setBalanceNum(availableNum);
         setDisplayBalance(availableDisplay);
@@ -31,10 +29,8 @@ export const useBalance = (
         const rawBalance = await contract.balanceOf(accountAddress).call();
 
         const balanceNum = formatBalance(rawBalance, config.trc20TokenDecimals);
-        const displayBalance = formatDisplayBalance(
-          rawBalance,
-          config.trc20TokenDecimals
-        );
+        const displayBalance =
+          formatDisplayBalance(rawBalance, config.trc20TokenDecimals) || "0";
 
         setBalanceNum(balanceNum);
         setDisplayBalance(displayBalance);
@@ -64,10 +60,8 @@ export const useUTokenBalance = (
       const rawBalance = await contract.balanceOf(accountAddress).call();
 
       const balanceNum = formatBalance(rawBalance, config.utokenDecimals);
-      const displayBalance = formatDisplayBalance(
-        rawBalance,
-        config.utokenDecimals
-      );
+      const displayBalance =
+        formatDisplayBalance(rawBalance, config.utokenDecimals) || "0";
 
       setBalanceNum(balanceNum);
       setDisplayBalance(displayBalance);

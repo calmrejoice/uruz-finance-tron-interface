@@ -1,40 +1,44 @@
-import { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import { Flex, Heading, Text } from "@chakra-ui/react";
+import { Flex, Heading, Skeleton, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
-import { IProposal, mockProposals } from "@constants/mockProposals";
 import { Card } from "@components/Shared/Card";
 import { ProposalHistoryCard } from "@components/ProposalDetailsPage/ProposalHistoryCard";
-import { ProposalVotesCard } from "@components/ProposalDetailsPage/ProposalVotesCard";
+import { ProposalCard } from "@components/ProposalDetailsPage/ProposalCard";
+import { useProposals } from "@hooks/swrHooks";
 
 const ProposalDetailsPage: NextPage = () => {
   const router = useRouter();
   const { query } = router;
-  const { proposalId } = query;
-  const [proposal, setProposal] = useState<IProposal>();
+  const { proposalId }: any = query;
 
-  useEffect(() => {
-    if (proposalId) {
-      const data = mockProposals.filter(
-        (mockProposal) => mockProposal.id.toString() === proposalId
-      )[0];
-      setProposal(data);
-    }
-  }, [proposalId]);
+  const { proposals, isLoadingProposals } = useProposals();
+  const proposal = proposals?.filter(
+    (prop) => prop.id === parseInt(proposalId)
+  )[0];
 
   return (
     <Flex mx="32" flexDir="column">
       <Flex flexDir="row">
-        <ProposalVotesCard proposal={proposal} />
-        <ProposalHistoryCard proposal={proposal} />
+        <ProposalCard
+          proposal={proposal}
+          isLoadingProposal={isLoadingProposals}
+        />
+        <ProposalHistoryCard
+          proposal={proposal}
+          isLoading={isLoadingProposals}
+        />
       </Flex>
 
       <Card flexDir="column">
         <Heading fontSize="lg" mb="6">
           Description
         </Heading>
-        <Text>{proposal?.description?.description}</Text>
+        {isLoadingProposals ? (
+          <Skeleton>placeholder</Skeleton>
+        ) : (
+          <Text>{proposal?.description?.description}</Text>
+        )}
       </Card>
     </Flex>
   );

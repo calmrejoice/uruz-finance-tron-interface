@@ -14,6 +14,7 @@ import { AccountStat } from "@components/PortfolioPage/AccountStat";
 import { Card } from "@components/Shared/Card";
 import { useAuth } from "@context/AuthContext";
 import { useStakeDetails } from "@hooks/swrHooks";
+import { numberWithCommas } from "@utils/formatBalance";
 import { StakeModal } from "./StakeModal";
 import { WithdrawModal } from "./WithdrawModal";
 
@@ -68,7 +69,7 @@ export const StakeCard = () => {
             <Skeleton>placeholder</Skeleton>
           ) : (
             <Text fontSize="4xl" fontWeight="bold">
-              {stakeDetails?.accountStaked} URZ
+              {numberWithCommas(stakeDetails?.accountStaked?.toFixed(0))} URZ
             </Text>
           )}
         </HStack>
@@ -82,7 +83,9 @@ export const StakeCard = () => {
         <Divider orientation="vertical" height="3rem" />
         <AccountStat
           title="Total Staked"
-          value={`${stakeDetails?.totalStaked} URZ`}
+          value={`${numberWithCommas(
+            stakeDetails?.totalStaked?.toFixed(0)
+          )} URZ`}
           isLoading={isLoadingStakeDetails}
         />
       </HStack>

@@ -12,9 +12,29 @@ import { useRouter } from "next/router";
 import { Card } from "@components/Shared/Card";
 import { InfoTooltip } from "@components/Shared/InfoTooltip";
 import { AiOutlinePlus } from "react-icons/ai";
+import { useBalance } from "@hooks/useBalance";
+import { tronWeb } from "@utils/tronWeb";
+import { useAuth } from "@context/AuthContext";
+import { config } from "@constants/config";
+import { formatDisplayBalance, numberWithCommas } from "@utils/formatBalance";
+import { useVotesCasted } from "@hooks/useGovernance";
 
 export const VotesCard = () => {
   const router = useRouter();
+  const { address, tron } = useAuth();
+  const { displayBalance } = useBalance(
+    tron,
+    address,
+    config.urzAddress,
+    false
+  );
+
+  const { balanceNum: wurzBalanceNum } =
+    useBalance(tron, address, config.wurzAddress, false) || 0;
+
+  const { votesCasted, votesCastedNum } = useVotesCasted(tron, address);
+
+  const totalVotes = wurzBalanceNum + parseFloat(votesCastedNum.toString());
 
   return (
     <Card flex={1} flexDir="column" height="100%">
@@ -31,32 +51,34 @@ export const VotesCard = () => {
         <Spacer />
         <HStack my="6">
           <Image src="/tokens/urz.png" boxSize="20px" alt="urz logo" />
-          <Text fontWeight="bold">0 URZ</Text>
+          <Text fontWeight="bold">{displayBalance} URZ</Text>
         </HStack>
       </HStack>
 
       <HStack alignItems="center" mb="6">
         <Heading fontSize="lg">My votes</Heading>
-        <InfoTooltip label="Stake URZ to vote. You can vote for your favored proposal and revoke the votes you have casted after the voting ended. Your votes remain can be either revoked or cast on other proposals." />
+        <InfoTooltip label="Stake URZ to vote. 1 Staked URZ = 1 Vote. You can vote for your favored proposal and revoke the votes you have casted after the voting ended. Your votes remain can be either revoked or cast on other proposals." />
         <Spacer />
       </HStack>
 
       <HStack>
         <Text variant="helper">Total votes</Text>
         <Spacer />
-        <Text fontWeight="bold">0</Text>
+        <Text fontWeight="bold">{formatDisplayBalance(totalVotes, 0)}</Text>
       </HStack>
 
       <HStack>
         <Text variant="helper">Total votes casted</Text>
         <Spacer />
-        <Text fontWeight="bold">0</Text>
+        <Text fontWeight="bold">{votesCasted}</Text>
       </HStack>
 
       <HStack mb="6">
         <Text variant="helper">Total votes remaining</Text>
         <Spacer />
-        <Text fontWeight="bold">0</Text>
+        <Text fontWeight="bold">
+          {numberWithCommas(wurzBalanceNum?.toFixed(0))}
+        </Text>
       </HStack>
 
       <HStack spacing="6">

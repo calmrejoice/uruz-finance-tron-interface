@@ -1,8 +1,8 @@
 import { config } from "@constants/config";
 import { BigNumber } from "ethers";
 
-export function numberWithCommas(x: string) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+export function numberWithCommas(x: string | undefined) {
+  return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 export function truncateHash(hash: string, length = 38): string {
@@ -24,7 +24,9 @@ export function formatDisplayBalance(
   let displayBalance;
 
   if (balance === 0 || balance % 1 == 0) {
-    displayBalance = balance.toString();
+    displayBalance = numberWithCommas(balance.toString());
+  } else if (balance < 0.000001) {
+    displayBalance = "0";
   } else if (balance >= 1000) {
     displayBalance = numberWithCommas(balance.toFixed(2).toString());
   } else {

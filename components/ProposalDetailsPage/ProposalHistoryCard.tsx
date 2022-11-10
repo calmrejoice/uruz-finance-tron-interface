@@ -2,15 +2,19 @@ import { Flex, HStack, Icon, Spacer, Text, VStack } from "@chakra-ui/react";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 
 import { Card } from "@components/Shared/Card";
-import { IProposal } from "@constants/mockProposals";
+import { IProposalDetails } from "@constants/IProposalDetails";
 import { formatDate } from "@utils/formatDate";
 import { ProposalState } from "./ProposalState";
 
 type ProposalHistoryCardProps = {
-  proposal: IProposal | undefined;
+  proposal: IProposalDetails | undefined;
+  isLoading: boolean;
 };
 
-export const ProposalHistoryCard = ({ proposal }: ProposalHistoryCardProps) => {
+export const ProposalHistoryCard = ({
+  proposal,
+  isLoading,
+}: ProposalHistoryCardProps) => {
   return (
     <Card flexDir="column" flex={1}>
       <Text variant="helper">Proposal History</Text>
