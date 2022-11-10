@@ -7,6 +7,7 @@ import {
   Progress,
   Spacer,
   Text,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { Card } from "@components/Shared/Card";
@@ -16,6 +17,7 @@ import { useAuth } from "@context/AuthContext";
 import { useStakeDetails } from "@hooks/swrHooks";
 import { onCastVote } from "@hooks/useGovernance";
 import { useState } from "react";
+import { ProposalVoteModal } from "./ProposalVoteModal";
 
 type ProposalCardProps = {
   proposal: IProposalDetails | undefined;
@@ -28,40 +30,17 @@ export const ProposalCard = ({
 }: ProposalCardProps) => {
   const { tron, address } = useAuth();
 
-  const { stakeDetails, isLoadingStakeDetails } = useStakeDetails(address);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const toast = useToast();
-
-  const handleCastVote = async (support: boolean) => {
-    setIsLoading(true);
-    const res = await onCastVote(
-      tron,
-      proposal?.id,
-      stakeDetails?.accountStaked,
-      support
-    );
-
-    if (res.success === false) {
-      toast({
-        title: "Transaction failed.",
-        description: `Error: ${res.error}`,
-        status: "error",
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "Transaction successful",
-        description: ToastLinkButton(res),
-        status: "success",
-        isClosable: true,
-      });
-    }
-    setIsLoading(false);
-  };
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [voteFor, setVoteFor] = useState(false);
 
   return (
     <Card flex={2}>
+      <ProposalVoteModal
+        isOpen={isOpen}
+        onClose={onClose}
+        voteFor={voteFor}
+        proposalId={proposal?.id}
+      />
       <Flex flexDir="column" alignItems="flex-start" width="100%">
         <Badge># {proposal?.id}</Badge>
         <Heading fontSize="lg" my="6">
@@ -87,7 +66,12 @@ export const ProposalCard = ({
               bgColor="gray.400"
             />
 
-            <Button onClick={() => handleCastVote(true)} isLoading={isLoading}>
+            <Button
+              onClick={() => {
+                setVoteFor(true);
+                onOpen();
+              }}
+            >
               For
             </Button>
           </Flex>
@@ -109,7 +93,12 @@ export const ProposalCard = ({
               bgColor="gray.400"
             />
 
-            <Button onClick={() => handleCastVote(false)} isLoading={isLoading}>
+            <Button
+              onClick={() => {
+                setVoteFor(false);
+                onOpen();
+              }}
+            >
               Against
             </Button>
           </Flex>
