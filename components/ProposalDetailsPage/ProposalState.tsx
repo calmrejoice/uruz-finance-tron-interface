@@ -10,10 +10,15 @@ type ProposalStateProps = {
 export const ProposalState = ({ date, title }: ProposalStateProps) => {
   return (
     <HStack w="100%">
-      <Icon
-        as={BsFillCheckCircleFill}
-        color={date ? "green.500" : "gray.300"}
-      />
+      {title === "End" ? (
+        <Icon as={BsFillCheckCircleFill} color="yellow.600" />
+      ) : (
+        <Icon
+          as={BsFillCheckCircleFill}
+          color={date ? "green.500" : "gray.300"}
+        />
+      )}
+
       <Text fontSize="sm" fontWeight="medium">
         {title}
       </Text>

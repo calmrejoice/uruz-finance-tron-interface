@@ -48,14 +48,14 @@ export const config = {
   proposals: [
     {
       id: 1,
-      createdDate: 1664129753 * 1000,
-      startDate: 1664229753 * 1000,
-      // endDate: 1664329753 * 1000,
+      createdDate: 1665432845 * 1000,
+      startDate: 1665432845 * 1000,
+      endDate: 1668370445 * 1000,
       // queuedDate: 1664429753 * 1000,
       // executedDate: 1664529753 * 1000,
       cancelDate: undefined,
 
-      state: "Executed",
+      state: "Active",
       description: {
         title: "UFP-1 Adjusting the Reserve Factor of URZ Market to 75%",
         description: "UFP-1 Adjusting the Reserve Factor of URZ Market to 75%",
@@ -65,12 +65,12 @@ export const config = {
       id: 2,
       createdDate: 1664129753 * 1000,
       startDate: 1664229753 * 1000,
-      // endDate: 1664329753 * 1000,
+      endDate: 1668370445 * 1000,
       // queuedDate: 1664429753 * 1000,
       // executedDate: 1664529753 * 1000,
       cancelDate: undefined,
 
-      state: "Created",
+      state: "Active",
       description: {
         title: "UFP-2 Adjusting the Reserve Factor of URZ Market to 15%",
         description: "UFP-2 Adjusting the Reserve Factor of URZ Market to 15%",

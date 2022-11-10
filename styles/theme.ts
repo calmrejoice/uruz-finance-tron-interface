@@ -25,12 +25,14 @@ const buttonStyle = {
   },
   variants: {
     brand: {
+      colorScheme: "brand",
       color: "white",
       bgColor: BRAND_COLOR,
       fontSize: "sm",
       _hover: {
         bgColor: BRAND_HOVER_COLOR,
       },
+      _loading: { _hover: { bgColor: BRAND_COLOR } },
     },
     brandLink: (props: StyleFunctionProps) => ({
       color: mode("black", "white")(props),
