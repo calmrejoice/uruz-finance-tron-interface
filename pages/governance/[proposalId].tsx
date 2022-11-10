@@ -6,6 +6,7 @@ import { Card } from "@components/Shared/Card";
 import { ProposalHistoryCard } from "@components/ProposalDetailsPage/ProposalHistoryCard";
 import { ProposalCard } from "@components/ProposalDetailsPage/ProposalCard";
 import { useProposals } from "@hooks/swrHooks";
+import { ProposalVotesCard } from "@components/ProposalDetailsPage/ProposalVotesCard";
 
 const ProposalDetailsPage: NextPage = () => {
   const router = useRouter();
@@ -30,16 +31,19 @@ const ProposalDetailsPage: NextPage = () => {
         />
       </Flex>
 
-      <Card flexDir="column">
-        <Heading fontSize="lg" mb="6">
-          Description
-        </Heading>
-        {isLoadingProposals ? (
-          <Skeleton>placeholder</Skeleton>
-        ) : (
-          <Text>{proposal?.description?.description}</Text>
-        )}
-      </Card>
+      <Flex>
+        <Card flexDir="column" flex={2}>
+          <Heading fontSize="lg" mb="6">
+            Description
+          </Heading>
+          {isLoadingProposals ? (
+            <Skeleton>placeholder</Skeleton>
+          ) : (
+            <Text>{proposal?.description?.description}</Text>
+          )}
+        </Card>
+        <ProposalVotesCard proposalId={proposalId} />
+      </Flex>
     </Flex>
   );
 };

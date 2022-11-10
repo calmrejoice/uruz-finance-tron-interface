@@ -101,3 +101,31 @@ export const useVotesCasted = (tronWeb: any, address: string) => {
 
   return { votesCasted, votesCastedNum };
 };
+
+export const useVotesCastedOnProposal = (
+  tronWeb: any,
+  address: string,
+  proposalId: string
+) => {
+  const [votesCasted, setVotesCasted] = useState("0");
+  const [votesCastedNum, setVotesCastedNum] = useState(0);
+
+  useEffect(() => {
+    if (!tronWeb || !address) return;
+
+    const getVotesCasted = async () => {
+      const contract = await tronWeb?.contract().at(config.wurzAddress);
+      const votesCastedBN = await contract.lockTo(address, proposalId).call();
+
+      const votesCastedDisplay = formatDisplayBalance(votesCastedBN, 18) || "0";
+      const votesCastedNum = formatBalance(votesCastedBN, 18) || 0;
+
+      setVotesCasted(votesCastedDisplay);
+      setVotesCastedNum(votesCastedNum);
+    };
+
+    getVotesCasted().catch((e) => {});
+  }, [tronWeb, address]);
+
+  return { votesCasted, votesCastedNum };
+};
