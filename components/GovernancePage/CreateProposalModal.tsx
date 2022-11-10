@@ -90,9 +90,9 @@ export const CreateProposalModal = ({ isOpen, onClose }: any) => {
                   focusBorderColor={BRAND_COLOR}
                   fontSize="sm"
                 >
-                  {config.markets.map((market) => {
+                  {config.markets.map((market, i) => {
                     return (
-                      <option value={market?.collateralSymbol}>
+                      <option value={market?.collateralSymbol} key={i}>
                         {market?.collateralSymbol}
                       </option>
                     );

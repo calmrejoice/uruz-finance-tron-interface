@@ -39,11 +39,13 @@ export const useBorrowedBalance = (
         .borrowBalanceStored(accountAddress)
         .call();
       const decimals = isTrx ? config.trxDecimals : config.trc20TokenDecimals;
-      setBorrowedBalance(formatBalance(borrowedBalanceRaw, decimals));
 
-      setborrowedDisplayBalance(
-        formatDisplayBalance(borrowedBalanceRaw, decimals)
-      );
+      const borrowedBalance = formatBalance(borrowedBalanceRaw, decimals) || 0;
+      setBorrowedBalance(borrowedBalance);
+
+      const borrowedDisplayBalance =
+        formatDisplayBalance(borrowedBalanceRaw, decimals) || "0";
+      setborrowedDisplayBalance(borrowedDisplayBalance);
     };
     getBorrowedBalance().catch((e) => {});
   }, [tronWeb, accountAddress, refreshParams]);
