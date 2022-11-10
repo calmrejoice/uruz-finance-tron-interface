@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { config } from "@constants/config";
 import { tronWeb } from "@utils/tronWeb";
 import { BigNumber } from "ethers";
-import { formatDisplayBalance } from "@utils/formatBalance";
+import { formatBalance, formatDisplayBalance } from "@utils/formatBalance";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -24,8 +24,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         eta: data.eta.toString(),
         startBlock: data.startBlock.toString(),
         endBlock: data.endBlock.toString(),
-        forVotes: formatDisplayBalance(data.forVotes, 18),
-        againstVotes: formatDisplayBalance(data.againstVotes, 18),
+        forVotes: formatBalance(data.forVotes, 18),
+        againstVotes: formatBalance(data.againstVotes, 18),
         proposer: data.proposer,
         canceled: data.canceled,
         executed: data.executed,

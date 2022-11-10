@@ -24,16 +24,15 @@ export interface Description {
 }
 
 export interface IProposalDetails {
-  againstVotes: string;
+  againstVotes: number;
+  forVotes: number;
   createdDate: Date | number | undefined;
   executedDate: Date | number | undefined;
   queuedDate: Date | number | undefined;
   startDate: Date | number | undefined;
   endDate: Date | number | undefined;
   cancelDate: Date | number | undefined;
-
   description?: Description;
-  forVotes?: string;
   id: number;
   proposer?: string;
   state?: ProposalState;

@@ -16,11 +16,12 @@ import { IProposalDetails } from "@constants/IProposalDetails";
 import { useAuth } from "@context/AuthContext";
 import { useStakeDetails } from "@hooks/swrHooks";
 import { onCastVote } from "@hooks/useGovernance";
+import { formatDisplayBalance } from "@utils/formatBalance";
 import { useState } from "react";
 import { ProposalVoteModal } from "./ProposalVoteModal";
 
 type ProposalCardProps = {
-  proposal: IProposalDetails | undefined;
+  proposal: IProposalDetails;
   isLoadingProposal: boolean;
 };
 
@@ -32,6 +33,8 @@ export const ProposalCard = ({
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [voteFor, setVoteFor] = useState(false);
+
+  const totalVotes = proposal?.forVotes + proposal?.againstVotes;
 
   return (
     <Card flex={2}>
@@ -53,7 +56,7 @@ export const ProposalCard = ({
               <Text variant="helper">For</Text>
               <Spacer />
               <Text fontWeight="semibold" fontSize="sm">
-                {proposal?.forVotes}
+                {formatDisplayBalance(proposal?.forVotes, 0)}
               </Text>
             </HStack>
 
@@ -61,7 +64,7 @@ export const ProposalCard = ({
               colorScheme="yellow"
               borderRadius="full"
               size="xs"
-              value={20}
+              value={(proposal?.forVotes / totalVotes) * 100}
               my="3"
               bgColor="gray.400"
             />
@@ -80,7 +83,7 @@ export const ProposalCard = ({
               <Text variant="helper">Against</Text>
               <Spacer />
               <Text fontWeight="semibold" fontSize="sm">
-                {proposal?.againstVotes}
+                {formatDisplayBalance(proposal?.againstVotes, 0)}
               </Text>
             </HStack>
 
@@ -88,7 +91,7 @@ export const ProposalCard = ({
               colorScheme="yellow"
               borderRadius="full"
               size="xs"
-              value={20}
+              value={(proposal?.againstVotes / totalVotes) * 100}
               my="3"
               bgColor="gray.400"
             />
