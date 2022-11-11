@@ -26,9 +26,10 @@ export const useSupplied = (
       const exchangeRateBN = accountSnapshot[3];
       const utokenSupplied = accountSnapshot[1];
 
-      const underlyingDecimals = isTrx
-        ? config.trxDecimals
-        : config.trc20TokenDecimals;
+      const underlyingDecimals =
+        isTrx || utokenAddress === config.uusdtAddress
+          ? config.trxDecimals
+          : config.trc20TokenDecimals;
 
       const suppliedDisplay = convertToUnderlyingBalance(
         exchangeRateBN,

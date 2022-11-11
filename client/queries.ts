@@ -21,9 +21,10 @@ export const getUTokenLendStats = async (
 
   // Exchange rate
   const exchangeRateRaw = await contract.exchangeRateStored().call();
-  const underlyingDecimals = isTrx
-    ? config.trxDecimals
-    : config.trc20TokenDecimals;
+  const underlyingDecimals =
+    isTrx || utokenAddress === config.uusdtAddress
+      ? config.trxDecimals
+      : config.trc20TokenDecimals;
   const rateMantissa = 18 + underlyingDecimals - config.utokenDecimals;
 
   // @ts-ignore
@@ -76,9 +77,10 @@ export const getUTokenDetails = async (
 
   // Exchange rate
   const exchangeRateRaw = await contract.exchangeRateStored().call();
-  const underlyingDecimals = isTrx
-    ? config.trxDecimals
-    : config.trc20TokenDecimals;
+  const underlyingDecimals =
+    isTrx || utokenAddress === config.uusdtAddress
+      ? config.trxDecimals
+      : config.trc20TokenDecimals;
   const rateMantissa = 18 + underlyingDecimals - config.utokenDecimals;
 
   // @ts-ignore
@@ -199,7 +201,9 @@ export const getAccountSnapshot = async (
 
   const tokenPrice = (await getTokenPrice(tokenSymbol)) || 1;
   const decimals =
-    tokenSymbol === "TRX" ? config.trxDecimals : config.trc20TokenDecimals;
+    tokenSymbol === "TRX" || tokenSymbol === "USDT"
+      ? config.trxDecimals
+      : config.trc20TokenDecimals;
   const underlyingUTokenBalance = convertToUnderlyingBalance(
     exchangeRateMantissa,
     decimals,
