@@ -5,6 +5,8 @@ export const config = {
   unitrollerHexAddress: "0x90fabd3362b4fcd1c431ea3bbd7d3ae2c0ce5ee7",
   uurzAddress: "TByuWrmpZQb5yYYtWBrT4Kfhzz3jJ1GQ4E",
   uurzHexAddress: "0x1612121e897936acc60e399de926cc9ca45e2783",
+  uusdtAddress: "TBMjvh6BqBS6MQrUrFRLBDiXVEzTqkBS7s",
+  usdtAddress: "TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj",
   urzAddress: "TGaxQR6RmfkL9qhZzh8fF83dDLjnJBfVva",
   wurzAddress: "TFSj9KmFnVg9dUn6NyBeX2EuSFKeKvHyPT",
   utrxAddress: "TGjZXu9amnEfiUy3W8Z1ptxKnTVs6cb9vv",
@@ -12,7 +14,7 @@ export const config = {
   governorAlphaAddress: "TMCYfGnLv3fwFt3cRpkZr76DgMgGr5jDJb",
   proposalAddress: "TTv9UEgMDbevDWdFCUbxvvWchuMQgJNJaG",
   tokenPriceUrl:
-    "https://c.tronlink.org/v1/cryptocurrency/getprice?symbol=TRX,BTC,WIN,USDT,ETH&convert=USD",
+    "https://c.tronlink.org/v1/cryptocurrency/getprice?symbol=TRX,USDT&convert=USD",
 
   markets: [
     {
@@ -31,13 +33,14 @@ export const config = {
       collateralDecimals: 18,
       assetImage: "/tokens/urz.png",
     },
-    // {
-    //   collateralSymbol: "usdt",
-    //   utokenAddress: "TAZh2JdxuiXZrwWoxWSRznpqZgcK1rueXP",
-    //   collateralAddress: "TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj",
-    //   collateralName: "Tether USD",
-    //   assetImage: "/tokens/trx.png",
-    // },
+    {
+      collateralSymbol: "USDT",
+      utokenAddress: "TBMjvh6BqBS6MQrUrFRLBDiXVEzTqkBS7s",
+      collateralAddress: "TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj",
+      collateralName: "Tether",
+      collateralDecimals: 6,
+      assetImage: "/tokens/usdt.png",
+    },
   ],
   trxDecimals: 6,
   utokenDecimals: 8,

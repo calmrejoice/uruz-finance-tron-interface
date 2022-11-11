@@ -20,7 +20,6 @@ const MarketDetailsPage: NextPage = () => {
 
   const { marketDetails, isLoadingMarketDetails, mutate } =
     useMarketDetails(tokenSymbol);
-  console.log(marketDetails);
 
   return (
     <Flex mx="32" flexDir="row">

@@ -38,7 +38,7 @@ export const Header = () => {
       <HStack spacing="3">
         <IconButton
           aria-label="Toggle light or dark mode"
-          variant="ghost"
+          variant="solid"
           icon={colorMode === "dark" ? <FaSun /> : <FaRegMoon />}
           onClick={toggleColorMode}
         />

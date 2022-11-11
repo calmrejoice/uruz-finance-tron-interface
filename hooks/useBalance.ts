@@ -28,9 +28,14 @@ export const useBalance = (
         const contract = await tronWeb?.contract().at(tokenAddress);
         const rawBalance = await contract.balanceOf(accountAddress).call();
 
-        const balanceNum = formatBalance(rawBalance, config.trc20TokenDecimals);
+        // Account for USDT decimals
+        const decimals =
+          tokenAddress === config.usdtAddress
+            ? config.trxDecimals
+            : config.trc20TokenDecimals;
+        const balanceNum = formatBalance(rawBalance, decimals);
         const displayBalance =
-          formatDisplayBalance(rawBalance, config.trc20TokenDecimals) || "0";
+          formatDisplayBalance(rawBalance, decimals) || "0";
 
         setBalanceNum(balanceNum);
         setDisplayBalance(displayBalance);

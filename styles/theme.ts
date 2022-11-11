@@ -28,6 +28,7 @@ const buttonStyle = {
       colorScheme: "brand",
       color: "white",
       bgColor: BRAND_COLOR,
+      shadow: "lg",
       fontSize: "sm",
       _hover: {
         bgColor: BRAND_HOVER_COLOR,

@@ -138,11 +138,13 @@ export const getComptrollerDetails = async (utokenAddress: string) => {
 export const getTokenPrice = async (tokenSymbol: string) => {
   try {
     const { data } = await axios.get(config.tokenPriceUrl);
-    const { BTC, ETH, USDT, TRX, WIN } = data.data || {};
+    const { USDT, TRX } = data.data || {};
     if (tokenSymbol === "TRX") {
       return parseFloat(TRX?.quote.USD.price);
     } else if (tokenSymbol === "URZ") {
-      return parseFloat("0.3");
+      return parseFloat("0.369");
+    } else if (tokenSymbol === "USDT") {
+      return parseFloat(USDT?.quote.USD.price);
     }
     return 0.01;
   } catch (error) {

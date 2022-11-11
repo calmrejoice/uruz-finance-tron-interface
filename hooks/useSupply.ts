@@ -55,9 +55,15 @@ export const onSupply = async (
     const contract = await tronWeb?.contract().at(utokenAddress);
 
     if (!isTrx) {
-      const supplyAmountBN = BigInt(
-        supplyAmount * 10 ** config.trc20TokenDecimals
-      );
+      const decimals =
+        utokenAddress === config.uusdtAddress
+          ? config.trxDecimals
+          : config.trc20TokenDecimals;
+      const supplyAmountBN = BigInt(supplyAmount * 10 ** decimals);
+      console.log(config.uusdtAddress);
+      console.log(utokenAddress === config.uusdtAddress);
+      console.log(decimals);
+
       const result = await contract.mint(supplyAmountBN).send();
       return result;
     } else {

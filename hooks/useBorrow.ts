@@ -11,7 +11,10 @@ export const onBorrow = async (
 ) => {
   try {
     const contract = await tronWeb?.contract().at(utokenAddress);
-    const decimals = isTrx ? config.trxDecimals : config.trc20TokenDecimals;
+    const decimals =
+      isTrx || utokenAddress === config.uusdtAddress
+        ? config.trxDecimals
+        : config.trc20TokenDecimals;
     const borrowAmountBN = BigInt(borrowAmount * 10 ** decimals);
     const result = await contract.borrow(borrowAmountBN).send();
     return result;
@@ -38,7 +41,10 @@ export const useBorrowedBalance = (
       const borrowedBalanceRaw = await contract
         .borrowBalanceStored(accountAddress)
         .call();
-      const decimals = isTrx ? config.trxDecimals : config.trc20TokenDecimals;
+      const decimals =
+        isTrx || utokenAddress === config.uusdtAddress
+          ? config.trxDecimals
+          : config.trc20TokenDecimals;
 
       const borrowedBalance = formatBalance(borrowedBalanceRaw, decimals) || 0;
       setBorrowedBalance(borrowedBalance);

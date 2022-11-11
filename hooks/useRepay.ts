@@ -9,9 +9,11 @@ export const onRepay = async (
   const contract = await tronWeb?.contract().at(utokenAddress);
   try {
     if (!isTrx) {
-      const repayAmountBN = BigInt(
-        repayAmount * 10 ** config.trc20TokenDecimals
-      );
+      const decimals =
+        utokenAddress === config.uusdtAddress
+          ? config.trxDecimals
+          : config.trc20TokenDecimals;
+      const repayAmountBN = BigInt(repayAmount * 10 ** decimals);
       const result = await contract.repayBorrow(repayAmountBN).send();
       return result;
     } else {

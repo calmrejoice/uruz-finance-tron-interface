@@ -59,6 +59,7 @@ export const SupplyModal = ({
   const { colorMode } = useColorMode();
   const isTrx = market?.collateralSymbol === "TRX";
   const tokenAddress = isTrx ? undefined : market?.collateralAddress;
+
   const balance: any =
     useBalance(tron, address, tokenAddress, isTrx, marketDetails?.totalCash) ||
     0;
