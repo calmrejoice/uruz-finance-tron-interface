@@ -21,6 +21,8 @@ export const onCreateProposal = async (
     const encode = await abi.encode(["uint256"], [reserveFactorBN]);
     const calldatas = [encode];
 
+    console.log(encode);
+
     // const decode = await abi.decode(["uint256"], encode);
     // console.log(decode.toString());
 
