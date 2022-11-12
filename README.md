@@ -1,34 +1,69 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Uruz Finance
 
-## Getting Started
+## Overview
 
-First, run the development server:
+Uruz is a decentralized, non-custodial, pool-based interest rates platform that enables users to supply assets to earn interest, and to borrow against them to unlock liquidity.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+- [Uruz](https://uruz.finance/)
+- [Demo Video](https://youtu.be/yeTxHOR2n44)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Contract Addresses
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Here are the deployed contract addresses:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Comptroller [TPkfi6k8d7yj5WF7CALNLzCWT1ioDaH8qL](https://nile.tronscan.org/#/contract/TPkfi6k8d7yj5WF7CALNLzCWT1ioDaH8qL)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Unitroller [TPBngLaAUtFe9DzqKJri7ziMrS2SRK25XB](https://nile.tronscan.org/#/contract/TPBngLaAUtFe9DzqKJri7ziMrS2SRK25XB)
 
-## Learn More
+URZ [TGaxQR6RmfkL9qhZzh8fF83dDLjnJBfVva](https://nile.tronscan.org/#/contract/TGaxQR6RmfkL9qhZzh8fF83dDLjnJBfVva)
 
-To learn more about Next.js, take a look at the following resources:
+USDT-NILE [TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj](https://nile.tronscan.org/#/contract/TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+WURZ [TFSj9KmFnVg9dUn6NyBeX2EuSFKeKvHyPT](https://nile.tronscan.org/#/contract/TFSj9KmFnVg9dUn6NyBeX2EuSFKeKvHyPT)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+GovernorAlpha [TMCYfGnLv3fwFt3cRpkZr76DgMgGr5jDJb](https://nile.tronscan.org/#/contract/TMCYfGnLv3fwFt3cRpkZr76DgMgGr5jDJb)
 
-## Deploy on Vercel
+Timelock [TSsGkp7EWDV1HdC9tgjsDiobFpJwEYYTYz](https://nile.tronscan.org/#/contract/TSsGkp7EWDV1HdC9tgjsDiobFpJwEYYTYz)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+jumpRate TRX JumpRateModelV2 [TCvVDLi9YfuvcMNM8T4WogxDiPkXsEDJVa](https://nile.tronscan.org/#/contract/TCvVDLi9YfuvcMNM8T4WogxDiPkXsEDJVa)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+TRX CEther [TGjZXu9amnEfiUy3W8Z1ptxKnTVs6cb9vv](https://nile.tronscan.org/#/contract/TGjZXu9amnEfiUy3W8Z1ptxKnTVs6cb9vv)
+
+URZ CErc20Delegate [TS5aDYKwCZNVyVVQBnRUUnbfU9N7Q9isCY](https://nile.tronscan.org/#/contract/TS5aDYKwCZNVyVVQBnRUUnbfU9N7Q9isCY)
+
+URZ CErc20Delegator [TByuWrmpZQb5yYYtWBrT4Kfhzz3jJ1GQ4E](https://nile.tronscan.org/#/contract/TByuWrmpZQb5yYYtWBrT4Kfhzz3jJ1GQ4E)
+
+USDT CErc20Delegate [TB171o3UoyWxwnLABM7yDKtVeFSDyAKTt2](https://nile.tronscan.org/#/contract/TB171o3UoyWxwnLABM7yDKtVeFSDyAKTt2)
+
+USDT CErc20Delegator [TSauT3GhxXhVCUT2hkNRXdNAAr7xTzYsNs](https://nile.tronscan.org/#/contract/TSauT3GhxXhVCUT2hkNRXdNAAr7xTzYsNs)
+
+PriceOracle [TMDVSLJ4gmzxmZ87YDLeVBsxQizf9aSFaA](https://nile.tronscan.org/#/contract/TMDVSLJ4gmzxmZ87YDLeVBsxQizf9aSFaA)
+
+PriceOracleProxy [TP5e3UYcczAy4djF6GpLBCF1KzSDnxwaho](https://nile.tronscan.org/#/contract/TP5e3UYcczAy4djF6GpLBCF1KzSDnxwaho)
+
+UruzLens [TB7ictoxTENyjCA2RmDwN8XfF635zZthfF](https://nile.tronscan.org/#/contract/TB7ictoxTENyjCA2RmDwN8XfF635zZthfF)
+
+ProposalUrzCollateralFactor [TQZp7zvXC5vKyvYgNjR34c4TEEtMrUfTC5](https://nile.tronscan.org/#/contract/TQZp7zvXC5vKyvYgNjR34c4TEEtMrUfTC5)
+
+## Screenshots
+
+**Landing Page**
+![Landing Page](./assets/landing.png)
+
+**Markets**
+![Markets](./assets/markets.png)
+
+**Market Details**
+![Market Details](./assets/marketdetails.png)
+
+**Supply**
+![Supply](./assets/supply.png)
+
+**Portfolio**
+![Portfolio](./assets/portfolio.png)
+
+**Governance**
+![Governance](./assets/governance.png)
+
+**Stake**
+![Stake](./assets/stake.png)
